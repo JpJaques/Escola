@@ -1,0 +1,12 @@
+*.tvsconfig
+*.stat
+*.~1~
+*.~2~
+*.~3~
+__history
+*.ico
+*.png
+*.zip
+*.dcu
+*.bmp
+*.ini
