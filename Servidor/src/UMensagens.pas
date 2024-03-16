@@ -3,7 +3,7 @@ unit UMensagens;
 interface
 
 const
-Conexao_Realizada = 'Conexão Realizada Com Sucesso!';
+Conexao_Realizada = 'Conexão Realizada Com Sucesso!  ';
 
 implementation
 
