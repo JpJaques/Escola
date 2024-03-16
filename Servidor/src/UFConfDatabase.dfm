@@ -2,8 +2,8 @@ object FConfDatabase: TFConfDatabase
   Left = 0
   Top = 0
   BorderStyle = bsNone
-  ClientHeight = 350
-  ClientWidth = 293
+  ClientHeight = 205
+  ClientWidth = 387
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,17 +18,19 @@ object FConfDatabase: TFConfDatabase
   object pnlFundo: TJvPanel
     Left = 0
     Top = 0
-    Width = 293
-    Height = 350
+    Width = 387
+    Height = 205
     Align = alClient
     BevelOuter = bvNone
     BorderStyle = bsSingle
     Color = clWindow
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 293
+    ExplicitHeight = 350
     DesignSize = (
-      289
-      346)
+      383
+      201)
     object btnConfirmar: TJvSpeedButton
       Left = 192
       Top = 160
@@ -56,7 +58,7 @@ object FConfDatabase: TFConfDatabase
     object edtHostname: TJvEdit
       Left = 16
       Top = 32
-      Width = 137
+      Width = 166
       Height = 21
       Hint = 'HOSTNAME DATABASE'
       Flat = False
@@ -69,7 +71,7 @@ object FConfDatabase: TFConfDatabase
       TextHint = 'HOSTNAME'
     end
     object edtPorta: TJvEdit
-      Left = 167
+      Left = 190
       Top = 32
       Width = 58
       Height = 21
@@ -87,21 +89,24 @@ object FConfDatabase: TFConfDatabase
     object edtCaminho: TJvEdit
       Left = 16
       Top = 72
-      Width = 257
+      Width = 353
       Height = 21
-      Hint = 'C:\DIRETORIO\NOME_BANCO.FDB'
+      Hint = 'Click 2 Vezes para Abir Caixa de Pesquisa'
       Flat = False
       ParentFlat = False
+      OnMouseEnter = edtCaminhoMouseEnter
+      OnMouseLeave = edtCaminhoMouseLeave
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
       Text = ''
+      OnDblClick = edtCaminhoDblClick
       TextHint = 'CAMINHO'
     end
     object edtUsuario: TJvEdit
       Left = 16
       Top = 112
-      Width = 137
+      Width = 167
       Height = 21
       Hint = 'SYSDBA, ADMIN'
       Flat = False
@@ -113,9 +118,9 @@ object FConfDatabase: TFConfDatabase
       TextHint = 'USERNAME'
     end
     object edtSenha: TJvEdit
-      Left = 159
+      Left = 190
       Top = 112
-      Width = 114
+      Width = 140
       Height = 21
       Hint = 'SYSDBA, ADMIN'
       Flat = False
@@ -128,25 +133,34 @@ object FConfDatabase: TFConfDatabase
     end
     object pnlMensagens: TJvPanel
       Left = -2
-      Top = 207
-      Width = 293
-      Height = 141
+      Top = 69
+      Width = 387
+      Height = 0
       Anchors = [akLeft, akRight, akBottom]
       BevelOuter = bvNone
       Color = clWindow
       ParentBackground = False
       TabOrder = 5
+      ExplicitTop = 214
+      ExplicitWidth = 293
       object lblMensagem: TJvLabel
         Left = 0
         Top = 0
-        Width = 293
-        Height = 141
+        Width = 387
+        Height = 0
         Align = alClient
         Transparent = True
         WordWrap = True
-        ExplicitWidth = 5
+        ExplicitTop = 128
+        ExplicitWidth = 293
         ExplicitHeight = 13
       end
     end
+  end
+  object DialogoDatabase: TJvOpenDialog
+    Height = 0
+    Width = 0
+    Left = 240
+    Top = 16
   end
 end

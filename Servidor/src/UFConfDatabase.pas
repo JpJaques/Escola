@@ -23,7 +23,7 @@ JvExControls,
 JvSpeedButton,
 JvLabel,
 system.IniFiles,
-UInicializacao;
+UInicializacao, JvDialogs;
 
 type
   TFConfDatabase = class(TForm)
@@ -38,20 +38,27 @@ type
     btnTestar: TJvSpeedButton;
     btnCancelar: TJvSpeedButton;
     lblMensagem: TJvLabel;
+    DialogoDatabase: TJvOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure btnTestarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
+    procedure edtCaminhoDblClick(Sender: TObject);
+    procedure edtCaminhoMouseEnter(Sender: TObject);
+    procedure edtCaminhoMouseLeave(Sender: TObject);
   private
-    FCaminho  : string;
-    FUsername : string;
-    FSenha    : string;
-    FMensagem : string;
+    FCaminho:           string;
+    FUsername:          string;
+    FSenha:             string;
+    FMensagem:          string;
+    MensagemHabilitada: Boolean;
     function IIF(Expressao : Variant; RetornoVerdadeiro : Variant; RetornoFalse : Variant): Variant;
+    procedure PainelMensagem;
   public
     procedure HabilitaMensagem;
     procedure DesabilitaMensagem;
     procedure TestaConexao;
+
   end;
 
 var
@@ -65,6 +72,23 @@ uses
 {$R *.dfm}
 
 { TFConfDatabase }
+
+procedure TFConfDatabase.PainelMensagem;
+begin
+  if MensagemHabilitada then
+  begin
+    Self.Height := 350;
+    pnlMensagens.Height := 135;
+  end
+  else
+  begin
+    if not (Trim(lblMensagem.Caption) = '') then
+      lblMensagem.Caption := '';
+
+    pnlMensagens.Height := 0;
+    Self.Height := 205;
+  end;
+end;
 
 procedure TFConfDatabase.btnCancelarClick(Sender: TObject);
 begin
@@ -104,10 +128,58 @@ begin
   pnlMensagens.Caption := '';
 end;
 
-procedure TFConfDatabase.FormCreate(Sender: TObject);
+procedure TFConfDatabase.edtCaminhoDblClick(Sender: TObject);
 begin
-  pnlMensagens.Visible := False;
-  pnlFundo.Height      := pnlFundo.Height - pnlMensagens.Height;
+ DialogoDatabase.Title      := 'Selecione o banco de dados e click em Salvar.';
+ DialogoDatabase.DefaultExt := '*.fdb';
+ DialogoDatabase.Filter     := 'FDB|*.fdb|';
+
+ if DialogoDatabase.Execute then
+  edtCaminho.Text := DialogoDatabase.FileName;
+
+end;
+
+procedure TFConfDatabase.edtCaminhoMouseEnter(Sender: TObject);
+begin
+  edtCaminho.ShowHint := True;
+end;
+
+procedure TFConfDatabase.edtCaminhoMouseLeave(Sender: TObject);
+begin
+  edtCaminho.ShowHint := False;
+end;
+
+procedure TFConfDatabase.FormCreate(Sender: TObject);
+var
+  INI:     TIniFile;
+  Arquivo: string;
+begin
+  Arquivo := UInicializacao.Retorna_Dir_Arq_Configuracao(tArquivo);
+  INI     := TIniFile.Create(Arquivo);
+
+  if not INI.SectionExists('DATABASE') then
+  begin
+   INI.WriteString('DATABASE','HOSTNAME','LOCALHOST');
+   INI.WriteString('DATABASE','PORTA','3055');
+   INI.WriteString('DATABASE','DATABASE',ExtractFilePath(Application.ExeName + 'CONF'));
+   INI.WriteString('DATABASE','USERNAME','SYSDBA');
+   INI.WriteString('DATABASE','SENHA','masterkey');
+   edtHostname.Text := 'LOCALHOST';
+   edtPorta.Text    := '3055';
+   edtCaminho.Text  := ExtractFilePath(Application.ExeName + 'CONF');
+   edtUsuario.Text  := 'SYSDBA';
+   edtSenha.Text    := 'masterkey';
+  end
+  else
+  begin
+   edtHostname.Text := INI.ReadString('DATABASE','HOSTNAME','');
+   edtPorta.Text    := INI.ReadString('DATABASE','PORTA','');
+   edtCaminho.Text  := INI.ReadString('DATABASE','DATABASE','');
+   edtUsuario.Text  := INI.ReadString('DATABASE','USERNAME','');
+   edtSenha.Text    := INI.ReadString('DATABASE','SENHA','');
+  end;
+
+  MensagemHabilitada := False;
 end;
 
 procedure TFConfDatabase.HabilitaMensagem;

@@ -20,8 +20,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFPrincipal, FPrincipal);
-  Application.CreateForm(TFConfigServidor, FConfigServidor);
-  Application.CreateForm(TFConfDatabase, FConfDatabase);
   Application.Run;
 end.
 
