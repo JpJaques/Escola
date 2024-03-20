@@ -5,7 +5,7 @@ interface
 const
 Conexao_Realizada = 'Conexão Realizada Com Sucesso! Conectado!' ;
 
-Erro = 'ERRO!!';
+Erro = 'ERRO!! deu errrado!!iigbigi';
 
 implementation
 
