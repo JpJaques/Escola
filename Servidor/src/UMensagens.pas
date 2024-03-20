@@ -3,7 +3,9 @@ unit UMensagens;
 interface
 
 const
-Conexao_Realizada = 'Conexão Realizada Com Sucesso!' + #13+ 'Conectado!' ;
+Conexao_Realizada = 'Conexão Realizada Com Sucesso! Conectado!' ;
+
+Erro = 'ERRO!!';
 
 implementation
 
