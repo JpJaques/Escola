@@ -13,7 +13,7 @@ object FPrincipal: TFPrincipal
   Font.Style = []
   OldCreateOrder = False
   PopupMenu = ppMenu
-  Position = poOwnerFormCenter
+  Position = poDesktopCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -36,6 +36,7 @@ object FPrincipal: TFPrincipal
       Color = 5197615
       ParentBackground = False
       TabOrder = 0
+      OnMouseDown = pnlTopoMouseDown
       object btnFechar: TJvSpeedButton
         Left = 558
         Top = 1
@@ -60,6 +61,7 @@ object FPrincipal: TFPrincipal
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
+        OnMouseDown = pnlTopoMouseDown
         ExplicitWidth = 208
         ExplicitHeight = 32
       end

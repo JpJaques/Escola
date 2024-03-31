@@ -13,7 +13,8 @@ uses
   USMConexao in 'src\USMConexao.pas' {SMConexao: TDSServerModule},
   UFConfDatabase in 'src\UFConfDatabase.pas' {FConfDatabase},
   UInicializacao in 'src\UInicializacao.pas',
-  UMensagens in 'src\UMensagens.pas';
+  UMensagens in 'src\UMensagens.pas',
+  UResourses in 'src\UResourses.pas';
 
 {$R *.res}
 
