@@ -13,7 +13,7 @@ object FPrincipal: TFPrincipal
   Font.Style = []
   OldCreateOrder = False
   PopupMenu = ppMenu
-  Position = poDesktopCenter
+  Position = poMainFormCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -49,8 +49,8 @@ object FPrincipal: TFPrincipal
       object lblTitulo: TLabel
         Left = 1
         Top = 1
-        Width = 208
-        Height = 32
+        Width = 557
+        Height = 33
         Align = alClient
         Alignment = taCenter
         Caption = 'Aplica'#231#227'o Servidora'
@@ -60,6 +60,8 @@ object FPrincipal: TFPrincipal
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
+        ExplicitWidth = 208
+        ExplicitHeight = 32
       end
     end
     object pnlBody: TJvPanel
@@ -760,7 +762,7 @@ object FPrincipal: TFPrincipal
         object JvLabel1: TJvLabel
           Left = 0
           Top = 0
-          Width = 44
+          Width = 182
           Height = 21
           Align = alTop
           Alignment = taCenter
@@ -777,12 +779,13 @@ object FPrincipal: TFPrincipal
           HotTrackFont.Height = -16
           HotTrackFont.Name = 'Segoe UI'
           HotTrackFont.Style = []
+          ExplicitWidth = 44
         end
         object lblStatus: TJvLabel
           Left = 0
           Top = 21
-          Width = 6
-          Height = 21
+          Width = 182
+          Height = 174
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
           Font.Color = cl3DDkShadow
@@ -796,6 +799,8 @@ object FPrincipal: TFPrincipal
           HotTrackFont.Height = -16
           HotTrackFont.Name = 'Segoe UI'
           HotTrackFont.Style = []
+          ExplicitWidth = 6
+          ExplicitHeight = 21
         end
         object lblCompilacao: TJvLabel
           Left = 0
