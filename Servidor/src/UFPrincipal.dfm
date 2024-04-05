@@ -13,7 +13,7 @@ object FPrincipal: TFPrincipal
   Font.Style = []
   OldCreateOrder = False
   PopupMenu = ppMenu
-  Position = poDesktopCenter
+  Position = poMainFormCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
