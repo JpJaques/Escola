@@ -34,7 +34,12 @@ Vcl.ImgList,
 JvImageList,
 USMConexao,
 UFConfDatabase,
-UInicializacao, Data.DB, Vcl.Grids, Vcl.DBGrids;
+UInicializacao,
+Data.DB,
+Vcl.Grids,
+Vcl.DBGrids,
+UResourses,
+UMensagens;
 
 type
   TFPrincipal = class(TForm)
@@ -83,6 +88,8 @@ type
     procedure imgConfigDatabaseClick(Sender: TObject);
     procedure imgStartPauseClick(Sender: TObject);
     procedure imgConexoesClick(Sender: TObject);
+    procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     MsgRetornoInicializacao : string;
     AplicacaoIniciada       : Boolean;
@@ -110,6 +117,7 @@ implementation
 
 {$R *.dfm}
 
+
 procedure TFPrincipal.btnFecharClick(Sender: TObject);
 begin
   EsconderAplicacao;
@@ -123,8 +131,14 @@ end;
 
 procedure TFPrincipal.ExibirMensagensStatus;
 begin
-  if not (ServerContainer.DSServer.Started)          or
-     not (Trim(MsgRetornoInicializacao) = '')      then
+  if (Trim(lblMensagem.Caption) <> '') then
+    lblMensagem.Caption := '';
+
+  if (Trim(lblStatus.Caption) <> '') then
+    lblStatus.Caption := '';
+
+  if not (ServerContainer.DSServer.Started) or
+    (Trim(MsgRetornoInicializacao) <> Conexao_Realizada) then
   begin
     lblMensagem.Font.Name  := 'Segoe UI';
     lblMensagem.Font.Color := StringToColor('$2222B2');
@@ -133,28 +147,30 @@ begin
     lblMensagem.Alignment  := taLeftJustify;
     lblMensagem.Align      := alClient;
     lblMensagem.Caption    := MsgRetornoInicializacao;
-    lblStatus.Caption      := 'Servidor.: Desconectado!';
-    HintTrayIcon           := 'Servidor.: Desconectado!' + #13;
+    lblStatus.Caption      := ServidorDesconectado;
 
   end
   else
   begin
-    with lblStatus do
-    begin
-      Font.Name  := 'Segoe UI';
-      Font.Color := StringToColor('$800000');
-      Font.Size  := 12;
-      WordWrap   := False;
-      Alignment  := taLeftJustify;
-      Caption    := 'Servidor.: Conectado!' + #13 +
-                    '   Porta.:' + IntToStr(ServerContainer.DSTCPServerTransport.Port);
-    end;
 
-    HintTrayIcon := 'Servidor.: Conectado!' + #13 +
-                    'Porta....: ' + IntToStr(ServerContainer.DSTCPServerTransport.Port);
+      lblStatus.Font.Name  := 'Segoe UI';
+      lblStatus.Font.Color := StringToColor('$800000');
+      lblStatus.Font.Size  := 12;
+      lblStatus.WordWrap   := False;
+      lblStatus.Alignment  := taLeftJustify;
+      lblStatus.Caption    := Format(ServidorConectado,[IntToStr(ServerContainer.DSTCPServerTransport.Port)]);
   end;
-
+  HintTrayIcon := lblStatus.Caption;
   TrayIcon.Hint  := HintTrayIcon;
+end;
+
+procedure TFPrincipal.pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  Screen.Cursor := crSizeAll;
+  ReleaseCapture;
+  Self.Perform(wm_nclbuttondown,HTCAPTION,0);
+  Screen.Cursor := crDefault;
 end;
 
 procedure TFPrincipal.ppmFecharClick(Sender: TObject);
@@ -244,8 +260,8 @@ var
 begin
   try
     FConfigDataBase := TFConfDatabase.Create(nil);
-    FConfigDataBase.ShowModal;
     PararAplicacao;
+    FConfigDataBase.ShowModal;
     Inicializar;
   finally
     FConfigDataBase.Free;
@@ -263,9 +279,9 @@ end;
 procedure TFPrincipal.Inicializar;
 begin
   MsgRetornoInicializacao := '';
-  MsgRetornoInicializacao := UInicializacao.VerificaArquivoInicializacao;
+  MsgRetornoInicializacao := Inicializacao;
 
-  if (Trim(MsgRetornoInicializacao) = '') then
+  if (Trim(MsgRetornoInicializacao) = Conexao_Realizada) then
   begin
     imgStartPause.Picture.Bitmap := imgList.Items[0].Bitmap;
     imgStartPause.Hint           := 'PAUSAR APLICAÇÃO';
@@ -281,12 +297,12 @@ procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
   SMConexao            := TSMConexao.Create(Self);
   ServerContainer      := TServerContainer.Create(Self);
-  AplicacaoIniciada    := True;
+  //AplicacaoIniciada    := True;
   Inicializar;
   Application.ShowHint := True;
-  EsconderAplicacao;
-  AplicacaoIniciada    := False;
+  //AplicacaoIniciada    := False;
   GConexoes            := False;
+  EsconderAplicacao;
 end;
 
 procedure TFPrincipal.imgConfigServidorClick(Sender: TObject);
@@ -295,8 +311,8 @@ var
 begin
   FConfServer := TFConfigServidor.Create(nil);
   try
-    FConfServer.ShowModal;
     PararAplicacao;
+    FConfServer.ShowModal;
     Inicializar;
   finally
     FConfServer.Free;

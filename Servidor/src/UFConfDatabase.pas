@@ -23,7 +23,8 @@ JvExControls,
 JvSpeedButton,
 JvLabel,
 system.IniFiles,
-UInicializacao;
+ JvDialogs,
+ UMensagens;
 
 type
   TFConfDatabase = class(TForm)
@@ -33,25 +34,30 @@ type
     edtCaminho: TJvEdit;
     edtUsuario: TJvEdit;
     edtSenha: TJvEdit;
-    pnlMensagens: TJvPanel;
     btnConfirmar: TJvSpeedButton;
     btnTestar: TJvSpeedButton;
     btnCancelar: TJvSpeedButton;
+    DialogoDatabase: TJvOpenDialog;
     lblMensagem: TJvLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnTestarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
+    procedure edtCaminhoDblClick(Sender: TObject);
+    procedure edtCaminhoMouseEnter(Sender: TObject);
+    procedure edtCaminhoMouseLeave(Sender: TObject);
+    procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
-    FCaminho  : string;
-    FUsername : string;
-    FSenha    : string;
-    FMensagem : string;
+    FCaminho:           string;
+    FUsername:          string;
+    FSenha:             string;
+    FMensagem:          string;
+    MensagemHabilitada: Boolean;
     function IIF(Expressao : Variant; RetornoVerdadeiro : Variant; RetornoFalse : Variant): Variant;
   public
-    procedure HabilitaMensagem;
-    procedure DesabilitaMensagem;
     procedure TestaConexao;
+
   end;
 
 var
@@ -65,6 +71,7 @@ uses
 {$R *.dfm}
 
 { TFConfDatabase }
+
 
 procedure TFConfDatabase.btnCancelarClick(Sender: TObject);
 begin
@@ -80,15 +87,25 @@ begin
   FUsername := edtUsuario.Text;
   FSenha    := edtSenha.Text;
 
-  Arquivo   := UInicializacao.Retorna_Dir_Arq_Configuracao(tArquivo);
+  Arquivo   := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
   INI       := TIniFile.Create(Arquivo);
   try
-    if (FCaminho <> INI.ReadString('DATABASE','DATABASE','')) then
-      INI.WriteString('DATABASE', 'DATABASE',FCaminho)
-    else if (FUsername <> INI.ReadString('DATABASE','USERNAME','')) then
-      INI.WriteString('DATABASE', 'USERNAME',FUsername)
-    else if (FSenha <> INI.ReadString('DATABASE','SENHA','')) then
+    if not INI.SectionExists('DATABASE') then
+    begin
+      INI.WriteString('DATABASE', 'DATABASE',FCaminho);
+      INI.WriteString('DATABASE', 'USERNAME',FUsername);
       INI.WriteString('DATABASE', 'SENHA',FSenha);
+    end
+    else
+    begin
+      if (FCaminho <> INI.ReadString('DATABASE','DATABASE','')) then
+        INI.WriteString('DATABASE', 'DATABASE',FCaminho)
+      else if (FUsername <> INI.ReadString('DATABASE','USERNAME','')) then
+        INI.WriteString('DATABASE', 'USERNAME',FUsername)
+      else if (FSenha <> INI.ReadString('DATABASE','SENHA','')) then
+        INI.WriteString('DATABASE', 'SENHA',FSenha);
+    end;
+
     Close;
   finally
     INI.Free;
@@ -96,30 +113,51 @@ begin
 
 end;
 
-
-procedure TFConfDatabase.DesabilitaMensagem;
+procedure TFConfDatabase.edtCaminhoDblClick(Sender: TObject);
 begin
-  pnlMensagens.Visible := False;
-  pnlFundo.Height      := pnlFundo.Height - pnlMensagens.Height;
-  pnlMensagens.Caption := '';
+ DialogoDatabase.Title      := 'Selecione o banco de dados e click em Salvar.';
+ DialogoDatabase.DefaultExt := '*.fdb';
+ DialogoDatabase.Filter     := 'FDB|*.fdb|';
+
+ if DialogoDatabase.Execute then
+  edtCaminho.Text := DialogoDatabase.FileName;
+
+end;
+
+procedure TFConfDatabase.edtCaminhoMouseEnter(Sender: TObject);
+begin
+  edtCaminho.ShowHint := True;
+end;
+
+procedure TFConfDatabase.edtCaminhoMouseLeave(Sender: TObject);
+begin
+  edtCaminho.ShowHint := False;
 end;
 
 procedure TFConfDatabase.FormCreate(Sender: TObject);
+var
+  INI:     TIniFile;
+  Arquivo: string;
 begin
-  pnlMensagens.Visible := False;
-  pnlFundo.Height      := pnlFundo.Height - pnlMensagens.Height;
-end;
+  Arquivo := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
+  INI     := TIniFile.Create(Arquivo);
 
-procedure TFConfDatabase.HabilitaMensagem;
-begin
-  pnlMensagens.Visible  := True;
-  pnlFundo.Height       := pnlFundo.Height + pnlMensagens.Height;
-  lblMensagem.Font.Name := 'Segoe UI';
-  lblMensagem.Font.Size := 18;
-  lblMensagem.Caption   := FMensagem;
-  lblMensagem.WordWrap  := True;
-
-
+  if not INI.SectionExists('DATABASE') then
+  begin
+   edtHostname.Text := 'LOCALHOST';
+   edtPorta.Text    := '3055';
+   edtCaminho.Text  := ChangeFilePath((ExtractFilePath(Application.ExeName + 'CONF')+'DATABASE'),'.FDB');
+   edtUsuario.Text  := 'SYSDBA';
+   edtSenha.Text    := 'masterkey';
+  end
+  else
+  begin
+   edtHostname.Text := INI.ReadString('DATABASE','HOSTNAME','');
+   edtPorta.Text    := INI.ReadString('DATABASE','PORTA','');
+   edtCaminho.Text  := INI.ReadString('DATABASE','DATABASE','');
+   edtUsuario.Text  := INI.ReadString('DATABASE','USERNAME','');
+   edtSenha.Text    := INI.ReadString('DATABASE','SENHA','');
+  end;
 end;
 
 function TFConfDatabase.IIF(Expressao, RetornoVerdadeiro,RetornoFalse: Variant): Variant;
@@ -128,6 +166,15 @@ begin
     Result := RetornoVerdadeiro
   else
     Result := RetornoFalse;
+end;
+
+procedure TFConfDatabase.pnlFundoMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  Screen.Cursor := crSizeAll;
+  ReleaseCapture;
+  Self.Perform(wm_nclbuttondown,HTCAPTION,0);
+  Screen.Cursor := crDefault;
 end;
 
 procedure TFConfDatabase.btnTestarClick(Sender: TObject);
@@ -140,7 +187,8 @@ var
   Conexao : TSQLConnection;
   PathComp: string;
 begin
-  PathComp := edtHostname.Text + '/' + edtPorta.Text + ':' + FCaminho;
+  lblMensagem.Caption := '';
+  lblMensagem.WordWrap := True;
   Conexao  := TSQLConnection.Create(self);
   try
     try
@@ -149,18 +197,47 @@ begin
       Conexao.ConnectionName := 'FBConnection';
       Conexao.LoginPrompt    := False;
       Conexao.Params.Clear;
-      Conexao.Params.Text    := UInicializacao.Retorna_Param_Conexao_Database(PathComp,edtHostname.Text,edtSenha.Text);
+      Conexao.Params.Text :=
+          'DriverUnit=Data.DBXFirebird' + #13 +
+          'DriverPackageLoader=TDBXDynalinkDriverLoader,DbxCommonDriver240.bpl' + #13 +
+          'DriverAssemblyLoader=Borland.Data.TDBXDynalinkDriverLoader,Borland.Data.DbxCommonDriver,Version=24.0.0.0,Culture=neutral,PublicKeyToken=91d62ebb5b0d1b1b' + #13 +
+          'MetaDataPackageLoader=TDBXFirebirdMetaDataCommandFactory,DbxFirebirdDriver240.bpl' + #13 +
+          'MetaDataAssemblyLoader=Borland.Data.TDBXFirebirdMetaDataCommandFactory,Borland.Data.DbxFirebirdDriver,Version=24.0.0.0,Culture=neutral,PublicKeyToken=91d62ebb5b0d1b1b' + #13 +
+          'GetDriverFunc=getSQLDriverINTERBASE' + #13 +
+          'LibraryName=dbxfb.dll' + #13 +
+          'LibraryNameOsx=libsqlfb.dylib' + #13 +
+          'VendorLib=fbclient.dll' + #13 +
+          'VendorLibWin64=fbclient.dll' + #13 +
+          'VendorLibOsx=/Library/Frameworks/Firebird.framework/Firebird' + #13 +
+          'Database=' + edtCaminho.Text + #13 +
+          'User_Name=' + edtUsuario.Text + #13 +
+          'Password=' + edtSenha.Text + #13 +
+          'Role=RoleName' + #13 +
+          'MaxBlobSize=-1' + #13 +
+          'LocaleCode=0000' + #13 +
+          'IsolationLevel=ReadCommitted' + #13 +
+          'SQLDialect=3' + #13 +
+          'CommitRetain=False' + #13 +
+          'WaitOnLocks=True' + #13 +
+          'TrimChar=False' + #13 +
+          'BlobSize=-1' + #13 +
+          'ErrorResourceFile=' + #13 +
+          'RoleName=RoleName' + #13 +
+          'ServerCharSet=' + #13 +
+          'Trim Char=False';
+
       Conexao.Open;
 
-      FMensagem := PathComp + ' Conectado Com Sucesso!!';
-      HabilitaMensagem;
+      lblMensagem.Caption    := Conexao_Realizada + #13 +  PathComp;
       lblMensagem.Font.Color := clGreen;
+      lblMensagem.Font.Size  := 15;
+      Conexao.Close;
     except
-      on EX:Exception do
+      on Ex:Exception do
       begin
-        FMensagem := EX.Message;
-        HabilitaMensagem;
+        lblMensagem.Caption := Format(Erro,[Ex.Message]);
         lblMensagem.Font.Color := clRed;
+        lblMensagem.Font.Size  := 15;
       end;
     end;
    Conexao.Close;

@@ -9,16 +9,18 @@ System.Classes,
 System.SysUtils,
 Vcl.Forms,
 Data.DB,
-Data.DBXFirebird;
+Data.DBXFirebird,
+UConfiguracaoServidor,
+UMensagens,
+UFConfDatabase;
 
 type
   Tipo = (tDiretorio, tArquivo);
 
 function Retorna_Dir_Arq_Configuracao(ArqOuDir : Tipo):string;
-function VerificaArquivoInicializacao:string;
+function Inicializacao:string;
 function Retorna_Param_Conexao_Database:String; overload;
 function Retorna_Param_Conexao_Database(Database , Usuario, Senha: String):String; overload;
-procedure CriaIniPadrao;
 
 implementation
 
@@ -31,19 +33,23 @@ begin
 
 end;
 
-function VerificaArquivoInicializacao:string;
+function Inicializacao:string;
 var
   Ini:             TIniFile;
   ArquivoIni:      string;
   Conexao:         TSQLCOnnection;
   MensagemRetorno: TStrings;
+  FConfigServidor: TFConfigServidor;
+  FConfigDatabase: TFConfDatabase;
 begin
   Conexao         := TSQLConnection.Create(nil);
   MensagemRetorno := TStringList.Create;
   ArquivoIni      := Retorna_Dir_Arq_Configuracao(tArquivo);
+
   if not FileExists(ArquivoIni) then
   begin
-    CriaIniPadrao;
+    FConfigServidor := TFConfigServidor.create(nil);
+    FConfigServidor.Show;
   end;
 
   Ini := TIniFile.Create(ArquivoIni);
@@ -57,17 +63,26 @@ begin
       Conexao.ConnectionName := 'FBConnection';
       Conexao.LoginPrompt    := False;
       Conexao.Params.Clear;
+
+      if not Ini.SectionExists('DATABASE') then
+      begin
+        FConfigDatabase := TFConfDatabase.Create(nil);
+        FConfigDatabase.Show;
+
+      end;
+
       Conexao.Params.Text    := Retorna_Param_Conexao_Database(
           Ini.ReadString('DATABASE','DATABASE',''),
           Ini.ReadString('DATABASE','USERNAME',''),
           Ini.ReadString('DATABASE','SENHA',''));
       Conexao.Open;
       Conexao.Close;
+      MensagemRetorno.Add(Conexao_Realizada);
       Result := MensagemRetorno.Text;
     except
       on E:Exception do
       begin
-        MensagemRetorno.Add(E.Message);
+        MensagemRetorno.Add(Format(Erro,[E.Message]));
         Result := MensagemRetorno.Text;
       end;
     end;
@@ -76,35 +91,6 @@ begin
     MensagemRetorno.Free;
     Ini.Free;
     Conexao.Free;
-  end;
-
-end;
-
-procedure CriaIniPadrao;
-var
-  ini:               TIniFile;
-  Diretorio, ArqIni: string;
-  CaminhoDatabase:   string;
-begin
-  Diretorio := Retorna_Dir_Arq_Configuracao(tDiretorio);
-
-  if not DirectoryExists(Diretorio) then
-    ForceDirectories(Diretorio);
-
-  CaminhoDatabase := ChangeFileExt(extractFilepath(Application.ExeName) + 'DATABASE\DATABASE','.FDB');
-  ArqIni := Retorna_Dir_Arq_Configuracao(tArquivo);
-  ini    := TIniFile.Create(ArqIni);
-
-  try
-    ini.WriteString('SERVER','HOSTNAME','localhost');
-    ini.WriteString('SERVER','PORTA','1327');
-    ini.WriteString('DATABASE','HOSTNAME','localhost');
-    ini.WriteString('DATABASE','PORTA','3055');
-    ini.WriteString('DATABASE','DATABASE',CaminhoDatabase);
-    ini.WriteString('DATABASE','USERNAME','SYSDBA');
-    ini.WriteString('DATABASE','SENHA','masterkey');
-  finally
-    ini.Free;
   end;
 
 end;

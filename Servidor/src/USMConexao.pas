@@ -102,7 +102,7 @@ begin
   else
     CDSConexao.Append;
 
-  CDSConexao.FieldByName('IP').AsString := Conexao.Channel.ChannelInfo.ClientInfo.IpAddress;
+  CDSConexao.FieldByName('IP').AsString  := Conexao.Channel.ChannelInfo.ClientInfo.IpAddress;
   CDSConexao.FieldByName('ID').AsInteger := GetCurrentThreadId;
   CDSConexao.Post;
 end;
