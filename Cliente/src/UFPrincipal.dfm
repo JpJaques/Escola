@@ -18,7 +18,16 @@ object FPrincipal: TFPrincipal
     Left = 328
     Top = 184
     object CAdastro1: TMenuItem
-      Caption = 'CAdastro]'
+      Caption = 'Cadastro'
+    end
+    object Manuteno1: TMenuItem
+      Caption = 'Manuten'#231#227'o'
+    end
+    object Utilitarios1: TMenuItem
+      Caption = 'Utilitarios'
+      object Usurio1: TMenuItem
+        Caption = 'Usu'#225'rio'
+      end
     end
   end
 end

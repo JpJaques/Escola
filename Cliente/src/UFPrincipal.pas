@@ -20,6 +20,9 @@ type
   TFPrincipal = class(TForm)
     MainMenu1: TMainMenu;
     CAdastro1: TMenuItem;
+    Manuteno1: TMenuItem;
+    Utilitarios1: TMenuItem;
+    Usurio1: TMenuItem;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
