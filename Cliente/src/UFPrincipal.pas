@@ -14,10 +14,12 @@ Vcl.Forms,
 Vcl.Dialogs,
 UDMConexao,
 UInicializacao,
-UFConfigCliente;
+UFConfigCliente, Vcl.Menus;
 
 type
   TFPrincipal = class(TForm)
+    MainMenu1: TMainMenu;
+    CAdastro1: TMenuItem;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

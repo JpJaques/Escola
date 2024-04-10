@@ -38,7 +38,6 @@ UInicializacao,
 Data.DB,
 Vcl.Grids,
 Vcl.DBGrids,
-UResourses,
 UMensagens;
 
 type

@@ -19,8 +19,8 @@ uses
   System.SysUtils {FrmSplash},
   UFLogin in 'UFLogin.pas' {frmLogin},
   Vcl.Themes,
-  Vcl.Styles;
-
+  Vcl.Styles,
+  UCelio in 'src\UCelio.pas';
 
 {$R *.res}
 
@@ -28,7 +28,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFPrincipal, FPrincipal);
-  
   // Criando tela inicial Splash
   FrmSplash := TfrmSplash.Create(nil);
   FrmSplash.Show;
