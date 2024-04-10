@@ -14,7 +14,7 @@ Vcl.Forms,
 Vcl.Dialogs,
 UDMConexao,
 UInicializacao,
-UFConfigCliente, Vcl.Menus;
+UFConfigCliente, Vcl.Menus, Vcl.Imaging.jpeg, Vcl.ExtCtrls;
 
 type
   TFPrincipal = class(TForm)
@@ -23,6 +23,7 @@ type
     Manuteno1: TMenuItem;
     Utilitarios1: TMenuItem;
     Usurio1: TMenuItem;
+    img1: TImage;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
