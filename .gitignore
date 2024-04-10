@@ -12,3 +12,5 @@ __history
 *.ini
 *.identcache
 *.local
+*.dproj
+*.res

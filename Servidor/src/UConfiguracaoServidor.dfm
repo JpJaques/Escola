@@ -59,6 +59,7 @@ object FConfigServidor: TFConfigServidor
       Color = 16775416
       ParentBackground = False
       TabOrder = 1
+      OnMouseDown = pnlInfoMouseDown
       DesignSize = (
         556
         152)

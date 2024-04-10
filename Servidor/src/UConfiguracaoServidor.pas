@@ -18,12 +18,10 @@ JvExtComponent,
 JvPanel,
 JvExControls,
 JvSpeedButton,
-UServerContainer,
 Vcl.StdCtrls,
 JvExStdCtrls,
 JvEdit,
-System.IniFiles,
-UInicializacao;
+System.IniFiles;
 
 type
   TFConfigServidor = class(TForm)
@@ -38,6 +36,8 @@ type
     edtPorta: TJvEdit;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
+    procedure pnlInfoMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
   public
     iniAlterado : Boolean;
@@ -62,12 +62,12 @@ var
   DiretorioConfiguracao: string;
   ArquivoIni:            string;
 begin
-  DiretorioConfiguracao := UInicializacao.Retorna_Dir_Arq_Configuracao(tDiretorio);
+  DiretorioConfiguracao := ExtractFilePath(Application.ExeName) + 'CONF\';
 
   if not DirectoryExists(DiretorioConfiguracao) then
     ForceDirectories(DiretorioConfiguracao);
 
-  ArquivoIni := UInicializacao.Retorna_Dir_Arq_Configuracao(tArquivo);
+  ArquivoIni := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
   iniConfig  := TIniFile.Create(ArquivoIni);
   try
     if not iniConfig.SectionExists('SERVER') then
@@ -87,5 +87,13 @@ begin
   Self.Close;
 end;
 
+procedure TFConfigServidor.pnlInfoMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  Screen.Cursor := crSizeAll;
+  ReleaseCapture;
+  Self.Perform(wm_nclbuttondown,HTCAPTION,0);
+  Screen.Cursor := crDefault;
+end;
 
 end.
