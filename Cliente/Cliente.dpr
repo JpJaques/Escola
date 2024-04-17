@@ -23,11 +23,5 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Sky');
   Application.CreateForm(TFPrincipal, FPrincipal);
-  Application.CreateForm(TDMConexao, DMConexao);
-  Application.CreateForm(TFConfigCliente, FConfigCliente);
-  Application.CreateForm(TFPaiCadastro, FPaiCadastro);
-  Application.CreateForm(TFCadUsuarios, FCadUsuarios);
-  Application.CreateForm(TDMPaiCadastro, DMPaiCadastro);
-  Application.CreateForm(TDMCadUsuario, DMCadUsuario);
   Application.Run;
 end.
