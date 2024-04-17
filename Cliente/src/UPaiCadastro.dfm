@@ -96,7 +96,7 @@ object FPaiCadastro: TFPaiCadastro
     Top = 47
     Width = 163
     Height = 354
-    Caption = 'Panel2'
+    Caption = ' '
     Color = clMenu
     ParentBackground = False
     TabOrder = 1

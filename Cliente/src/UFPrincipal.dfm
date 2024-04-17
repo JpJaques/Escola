@@ -2,6 +2,7 @@ object FPrincipal: TFPrincipal
   Left = 0
   Top = 0
   Align = alClient
+  Caption = 'Menu Principal'
   ClientHeight = 350
   ClientWidth = 675
   Color = clBtnFace
@@ -8563,6 +8564,7 @@ object FPrincipal: TFPrincipal
       Caption = 'Utilitarios'
       object Usurio1: TMenuItem
         Caption = 'Usu'#225'rio'
+        OnClick = Usurio1Click
       end
     end
   end
