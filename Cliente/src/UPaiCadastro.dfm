@@ -88,7 +88,10 @@ object FPaiCadastro: TFPaiCadastro
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = 'Principal'
+      ExplicitLeft = 0
       ExplicitTop = 21
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object Panel2: TPanel

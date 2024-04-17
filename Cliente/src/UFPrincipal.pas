@@ -50,7 +50,7 @@ var
   MensagemRetorno : string;
   FConfigConexao  : TFConfigCliente;
 begin
-  ClientModule    := TClientModule.Create(Self);
+  DMconexao    := TDMConexao.Create(Self);
   MensagemRetorno := UInicializacao.RealizaConexao;
   if not (Trim(MensagemRetorno) = '') then
   begin

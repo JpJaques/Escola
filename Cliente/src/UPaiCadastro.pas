@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.Imaging.jpeg, JvExExtCtrls, JvExtComponent, JvClock,
   Vcl.Buttons, Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits, Data.DB,
-  UDMPaiCadastro, UCadConsulta;
+  UDMPaiCadastro;
 
 type
   TFPaiCadastro = class(TForm)
@@ -80,24 +80,16 @@ end;
 
 procedure TFPaiCadastro.EditCodigoButtonClick(Sender: TObject);
 begin
- FConsulta:= TFConsulta.Create(SELF);
-     try
-   FConsulta.FclassFilha := DMcadastro.FclassFilha;
-   FConsulta.ShowModal;
-   abort;
-     finally
-   EditCodigo.AsInteger:= (FConsulta.RetornoConsulta);
-   FreeAndNil(Fconsulta);
-   DMCadastro.AbrirRegistro(EditCodigo.AsInteger);
- end;
-
+  //
 end;
+
+
 
 procedure TFPaiCadastro.EditCodigoKeyPress(Sender: TObject; var Key: Char);
 begin
- DMCadastro.AbrirRegistro(EditCodigo.AsInteger);
- if (key = #13) then
- Perform(WM_NEXTDLGCTL, 0 ,0);
+ //DMCadastro.AbrirRegistro(EditCodigo.AsInteger);
+ //if (key = #13) then
+ //Perform(WM_NEXTDLGCTL, 0 ,0);
 end;
 
 procedure TFPaiCadastro.ExcluirClick(Sender: TObject);
@@ -123,7 +115,7 @@ end;
 
 procedure TFPaiCadastro.IncluirClick(Sender: TObject);
 begin
-DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
+//DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
 DS.DataSet.Insert;
 EditCodigo.AsInteger:= 0;
 end;
@@ -131,30 +123,30 @@ end;
 procedure TFPaiCadastro.PanelPaiExit(Sender: TObject);
 begin
 if EditCodigo.AsInteger> 0 then
-DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
+//DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
 end;
 
 procedure TFPaiCadastro.PrimeiroClick(Sender: TObject);
 begin
-DMCadastro.Primeiro;
+//DMCadastro.Primeiro;
 EditCodigo.AsInteger:= DMCadastro.CodigoAtual;
 end;
 
 procedure TFPaiCadastro.ProximoClick(Sender: TObject);
 begin
-DMCadastro.Proximo;
+//DMCadastro.Proximo;
 EditCodigo.AsInteger:= DMCadastro.CodigoAtual;
 end;
 
 procedure TFPaiCadastro.AnteriorClick(Sender: TObject);
 begin
-DMCadastro.Anterior;
+//DMCadastro.Anterior;
 EditCodigo.AsInteger:= DMCadastro.CodigoAtual;
 end;
 
 procedure TFPaiCadastro.UltimoClick(Sender: TObject);
 begin
-DMCadastro.Ultimo;
+//DMCadastro.Ultimo;
 EditCodigo.AsInteger:= DMCadastro.CodigoAtual;
 end;
 

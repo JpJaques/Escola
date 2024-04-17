@@ -39,23 +39,23 @@ begin
 
   INI := TIniFile.Create(arquivo);
   try
-    ClientModule.SQLConnection.Close;
-    ClientModule.SQLConnection.DriverName := 'DataSnap';
-    ClientModule.SQLConnection.LoginPrompt := False;
-    ClientModule.SQLConnection.Params.Clear;
-    ClientModule.SQLConnection.Params.Text :=
+    DMConexao.SQLConnection.Close;
+    DMConexao.SQLConnection.DriverName := 'DataSnap';
+    DMConexao.SQLConnection.LoginPrompt := False;
+    DMConexao.SQLConnection.Params.Clear;
+    DMConexao.SQLConnection.Params.Text :=
                               'Port='+INI.ReadString('SERVIDOR','PORTA','')+#13+
                               'HostName='+INI.ReadString('SERVIDOR','HOSTNAME','')+#13+
                               'CommunicationProtocol=tcp/ip'+#13+
                               'DatasnapContext=datasnap/';
     try
-     ClientModule.SQLConnection.Open;
+     DMConexao.SQLConnection.Open;
      Result := '';
     except
       on E:Exception do
       begin
       Result := E.Message;
-      ClientModule.SQLConnection.Close;
+      DMConexao.SQLConnection.Close;
       end;
     end;
   finally
