@@ -1,4 +1,4 @@
-object ClientModule: TClientModule
+object DMConexao: TDMConexao
   OldCreateOrder = False
   Height = 271
   Width = 415

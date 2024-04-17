@@ -1,0 +1,2 @@
+inherited DMCadUsuario: TDMCadUsuario
+end

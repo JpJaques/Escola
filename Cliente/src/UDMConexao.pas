@@ -7,7 +7,7 @@ uses
   Data.DBXCommon, IPPeerClient, Data.DB, Data.SqlExpr;
 
 type
-  TClientModule = class(TDataModule)
+  TDMConexao = class(TDataModule)
     SQLConnection: TSQLConnection;
   private
     FInstanceOwner: Boolean;
@@ -23,7 +23,7 @@ type
 end;
 
 var
-  ClientModule: TClientModule;
+  DMConexao: TDMConexao;
 
 implementation
 
@@ -31,19 +31,19 @@ implementation
 
 {$R *.dfm}
 
-constructor TClientModule.Create(AOwner: TComponent);
+constructor TDMConexao.Create(AOwner: TComponent);
 begin
   inherited;
   FInstanceOwner := True;
 end;
 
-destructor TClientModule.Destroy;
+destructor TDMConexao.Destroy;
 begin
   FServerMethodsClient.Free;
   inherited;
 end;
 
-function TClientModule.GetServerMethodsClient: TServerMethodsClient;
+function TDMConexao.GetServerMethodsClient: TServerMethodsClient;
 begin
   if FServerMethodsClient = nil then
   begin

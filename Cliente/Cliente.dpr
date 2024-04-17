@@ -4,17 +4,30 @@ uses
   Vcl.Forms,
   UFPrincipal in 'src\UFPrincipal.pas' {FPrincipal},
   ClientClassesUnit in 'ClientClassesUnit.pas',
-  UDMConexao in 'src\UDMConexao.pas' {ClientModule: TDataModule},
+  UDMConexao in 'src\UDMConexao.pas' {DMConexao: TDataModule},
   UFConfigCliente in 'src\UFConfigCliente.pas' {FConfigCliente},
-  UInicializacao in 'src\UInicializacao.pas';
+  UInicializacao in 'src\UInicializacao.pas',
+  Vcl.Themes,
+  Vcl.Styles,
+  UPaiCadastro in 'src\UPaiCadastro.pas' {FPaiCadastro},
+  UCadUsuario in 'src\UCadUsuario.pas' {FCadUsuarios},
+  UDMPaiCadastro in 'src\UDMPaiCadastro.pas' {DMPaiCadastro: TDataModule},
+  ClassPaiCadastro in 'Classes\ClassPaiCadastro.pas',
+  ClassUsuario in 'Classes\ClassUsuario.pas',
+  UDMCadUsuario in 'src\UDMCadUsuario.pas' {DMCadUsuario: TDataModule};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Sky');
   Application.CreateForm(TFPrincipal, FPrincipal);
-  Application.CreateForm(TClientModule, ClientModule);
+  Application.CreateForm(TDMConexao, DMConexao);
   Application.CreateForm(TFConfigCliente, FConfigCliente);
+  Application.CreateForm(TFPaiCadastro, FPaiCadastro);
+  Application.CreateForm(TFCadUsuarios, FCadUsuarios);
+  Application.CreateForm(TDMPaiCadastro, DMPaiCadastro);
+  Application.CreateForm(TDMCadUsuario, DMCadUsuario);
   Application.Run;
 end.

@@ -14,13 +14,18 @@ Vcl.Forms,
 Vcl.Dialogs,
 UDMConexao,
 UInicializacao,
-UFConfigCliente, Vcl.Menus;
+UFConfigCliente, Vcl.Menus, Vcl.Imaging.jpeg, Vcl.ExtCtrls, UCadUsuario;
 
 type
   TFPrincipal = class(TForm)
     MainMenu1: TMainMenu;
     CAdastro1: TMenuItem;
+    Manuteno1: TMenuItem;
+    Utilitarios1: TMenuItem;
+    Usurio1: TMenuItem;
+    img1: TImage;
     procedure FormCreate(Sender: TObject);
+    procedure Usurio1Click(Sender: TObject);
   private
     { Private declarations }
     procedure Inicializar;
@@ -61,6 +66,16 @@ begin
 
   end;
 
+end;
+
+procedure TFPrincipal.Usurio1Click(Sender: TObject);
+begin
+  FCadUsuarios := TFCadUsuarios.Create(self);
+  try
+    FCadUsuarios.ShowModal;
+  finally
+    FreeAndNil(FCadUsuarios);
+  end;
 end;
 
 end.
