@@ -20,7 +20,11 @@ uses
   UFLogin in 'UFLogin.pas' {frmLogin},
   Vcl.Themes,
   Vcl.Styles,
-  UCelio in 'src\UCelio.pas';
+  UCelio in 'src\UCelio.pas',
+  ClassPaiCadastro in '..\Cliente\Classes\ClassPaiCadastro.pas',
+  ClassUsuario in '..\Cliente\Classes\ClassUsuario.pas',
+  USMPaiCadastro in 'src\USMPaiCadastro.pas' {SMPaiCadastro: TDSServerModule},
+  USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule};
 
 {$R *.res}
 
@@ -28,6 +32,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFPrincipal, FPrincipal);
+  Application.CreateForm(TSMCadUsuario, SMCadUsuario);
   // Criando tela inicial Splash
   FrmSplash := TfrmSplash.Create(nil);
   FrmSplash.Show;

@@ -1,2 +1,2 @@
-inherited UDMCadCidade: TUDMCadCidade
+inherited DMCadUsuario: TDMCadUsuario
 end

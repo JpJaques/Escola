@@ -13,7 +13,8 @@ uses
   UCadUsuario in 'src\UCadUsuario.pas' {FCadUsuarios},
   UDMPaiCadastro in 'src\UDMPaiCadastro.pas' {DMPaiCadastro: TDataModule},
   ClassPaiCadastro in 'Classes\ClassPaiCadastro.pas',
-  ClassUsuario in 'Classes\ClassUsuario.pas';
+  ClassUsuario in 'Classes\ClassUsuario.pas',
+  UDMCadUsuario in 'src\UDMCadUsuario.pas' {DMCadUsuario: TDataModule};
 
 {$R *.res}
 
@@ -27,5 +28,6 @@ begin
   Application.CreateForm(TFPaiCadastro, FPaiCadastro);
   Application.CreateForm(TFCadUsuarios, FCadUsuarios);
   Application.CreateForm(TDMPaiCadastro, DMPaiCadastro);
+  Application.CreateForm(TDMCadUsuario, DMCadUsuario);
   Application.Run;
 end.

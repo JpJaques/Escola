@@ -4,10 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Classes, UDMPaiCadastro, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect;
+  Datasnap.DSConnect, ClassUsuario;
 
 type
-  TDMCadCidade = class(TDMPaiCadastro)
+  TDMCadUsuario = class(TDMPaiCadastro)
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -15,12 +16,20 @@ type
   end;
 
 var
-  DMCadCidade: TDMCadCidade;
+  DMCadUsuario: TDMCadUsuario;
 
 implementation
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TDMCadUsuario.DataModuleCreate(Sender: TObject);
+begin
+  FClassFilha := TClassUsuario.Create;
+  DSProviderConnection.ServerClassName := 'TSMUsuario';
+  inherited;
+
+end;
 
 end.
