@@ -7,7 +7,10 @@
   end
   inherited PageControl1: TPageControl
     inherited TabSheet1: TTabSheet
+      ExplicitLeft = 4
       ExplicitTop = 24
+      ExplicitWidth = 449
+      ExplicitHeight = 326
       object Usuário: TLabel
         Left = 40
         Top = 62
@@ -24,7 +27,7 @@
       end
       object dbNome: TDBEdit
         Left = 40
-        Top = 88
+        Top = 81
         Width = 353
         Height = 21
         TabOrder = 0

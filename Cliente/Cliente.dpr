@@ -12,7 +12,8 @@ uses
   UPaiCadastro in 'src\UPaiCadastro.pas' {FPaiCadastro},
   UCadUsuario in 'src\UCadUsuario.pas' {FCadUsuarios},
   UDMPaiCadastro in 'src\UDMPaiCadastro.pas' {DMPaiCadastro: TDataModule},
-  ClassPaiCadastro in 'Classes\ClassPaiCadastro.pas';
+  ClassPaiCadastro in 'Classes\ClassPaiCadastro.pas',
+  ClassUsuario in 'Classes\ClassUsuario.pas';
 
 {$R *.res}
 

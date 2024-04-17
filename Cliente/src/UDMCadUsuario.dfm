@@ -1,0 +1,2 @@
+inherited UDMCadCidade: TUDMCadCidade
+end
