@@ -3,18 +3,16 @@ unit UFPrincipal;
 interface
 
 uses
-Winapi.Windows,
-Winapi.Messages,
-System.SysUtils,
-System.Variants,
-System.Classes,
-Vcl.Graphics,
-Vcl.Controls,
-Vcl.Forms,
-Vcl.Dialogs,
-UDMConexao,
-UInicializacao,
-UFConfigCliente, Vcl.Menus;
+  Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  UDMConexao,
+  UInicializacao,
+  UFConfigCliente, Vcl.Menus;
 
 type
   TFPrincipal = class(TForm)
@@ -42,14 +40,15 @@ end;
 
 procedure TFPrincipal.Inicializar;
 var
-  MensagemRetorno : string;
-  FConfigConexao  : TFConfigCliente;
+  MensagemRetorno: string;
+  FConfigConexao : TFConfigCliente;
 begin
-  ClientModule    := TClientModule.Create(Self);
+  DMConexao       := TDMConexao.Create(Self);
   MensagemRetorno := UInicializacao.RealizaConexao;
+
   if not (Trim(MensagemRetorno) = '') then
   begin
-    if (MessageDlg(MensagemRetorno+#13+'Deseja Abrir Realizar Configuração?',
+    if (MessageDlg(MensagemRetorno + #13 + 'Deseja Abrir Realizar Configuração?',
        mtError,[mbOK, mbNo],0)= mrOk) then
     begin
       FConfigConexao := TFConfigCliente.Create(nil);

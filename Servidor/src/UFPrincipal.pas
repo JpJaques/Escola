@@ -3,42 +3,42 @@ unit UFPrincipal;
 interface
 
 uses
-Winapi.Windows,
-Winapi.Messages,
-System.SysUtils,
-System.Variants,
-System.Classes,
-Vcl.Graphics,
-Vcl.Controls,
-Vcl.Forms,
-Vcl.Dialogs,
-Vcl.ExtCtrls,
-JvExExtCtrls,
-JvExtComponent,
-JvPanel,
-JvExControls,
-JvSpeedButton,
-JvImage,
-Vcl.Imaging.pngimage,
-JvShape,
-JvComponentBase,
-JvTrayIcon,
-JvLabel,
-Vcl.Menus,
-JvMenus,
-UServerContainer,
-Vcl.StdCtrls,
-UConfiguracaoServidor,
-System.ImageList,
-Vcl.ImgList,
-JvImageList,
-USMConexao,
-UFConfDatabase,
-UInicializacao,
-Data.DB,
-Vcl.Grids,
-Vcl.DBGrids,
-UMensagens;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  JvExExtCtrls,
+  JvExtComponent,
+  JvPanel,
+  JvExControls,
+  JvSpeedButton,
+  JvImage,
+  Vcl.Imaging.pngimage,
+  JvShape,
+  JvComponentBase,
+  JvTrayIcon,
+  JvLabel,
+  Vcl.Menus,
+  JvMenus,
+  UServerContainer,
+  Vcl.StdCtrls,
+  UConfiguracaoServidor,
+  System.ImageList,
+  Vcl.ImgList,
+  JvImageList,
+  USMConexao,
+  UFConfDatabase,
+  UInicializacao,
+  Data.DB,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  UMensagens;
 
 type
   TFPrincipal = class(TForm)
@@ -151,13 +151,12 @@ begin
   end
   else
   begin
-
-      lblStatus.Font.Name  := 'Segoe UI';
-      lblStatus.Font.Color := StringToColor('$800000');
-      lblStatus.Font.Size  := 12;
-      lblStatus.WordWrap   := False;
-      lblStatus.Alignment  := taLeftJustify;
-      lblStatus.Caption    := Format(ServidorConectado,[IntToStr(ServerContainer.DSTCPServerTransport.Port)]);
+    lblStatus.Font.Name  := 'Segoe UI';
+    lblStatus.Font.Color := StringToColor('$800000');
+    lblStatus.Font.Size  := 12;
+    lblStatus.WordWrap   := False;
+    lblStatus.Alignment  := taLeftJustify;
+    lblStatus.Caption    := Format(ServidorConectado,[IntToStr(ServerContainer.DSTCPServerTransport.Port)]);
   end;
   HintTrayIcon := lblStatus.Caption;
   TrayIcon.Hint  := HintTrayIcon;

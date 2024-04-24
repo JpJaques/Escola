@@ -16,6 +16,8 @@ type
     btnLogar: TSpeedButton;
     edtLogin: TJvEdit;
     edtSenha: TJvEdit;
+    procedure btnLogarClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -27,6 +29,25 @@ var
 
 implementation
 
+uses
+  UFPrincipal, UDMConexao;
+
 {$R *.dfm}
+
+
+procedure TfrmLogin.btnLogarClick(Sender: TObject);
+var
+  FPrincipal: TFPrincipal;
+  Usuario: String;
+begin
+  Usuario := edtLogin.Text;
+
+  if (DMConexao.Logar(edtLogin.Text, edtSenha.Text) = True) then
+  begin
+    frmLogin.Close;
+    Application.CreateForm(TFPrincipal, FPrincipal);
+  end ;
+
+end;
 
 end.

@@ -23,10 +23,6 @@ object frmLogin: TfrmLogin
     Height = 128
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 168
-    ExplicitTop = 72
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object gbxPrincipal: TGroupBox
       AlignWithMargins = True
       Left = 4
@@ -35,10 +31,6 @@ object frmLogin: TfrmLogin
       Height = 120
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 8
-      ExplicitTop = 0
-      ExplicitWidth = 255
-      ExplicitHeight = 144
       object Image1: TImage
         Left = 11
         Top = 9
@@ -293,6 +285,7 @@ object frmLogin: TfrmLogin
           A4310C9A230000FF0000FF808080808080808080808080808080808080808080
           8080808080808080808080808080800000FF}
         NumGlyphs = 2
+        OnClick = btnLogarClick
       end
       object edtLogin: TJvEdit
         Left = 35
