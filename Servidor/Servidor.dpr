@@ -12,17 +12,17 @@ uses
   UExpositoraClasse in 'src\UExpositoraClasse.pas',
   USMConexao in 'src\USMConexao.pas' {SMConexao: TDSServerModule},
   UFConfDatabase in 'src\UFConfDatabase.pas' {FConfDatabase},
-  UInicializacao in 'src\UInicializacao.pas',
   UMensagens in 'src\UMensagens.pas',
   Vcl.Dialogs,
   System.SysUtils {FrmSplash},
   Vcl.Themes,
   Vcl.Styles,
-  UCelio in 'src\UCelio.pas',
   ClassPaiCadastro in '..\Cliente\Classes\ClassPaiCadastro.pas',
   ClassUsuario in '..\Cliente\Classes\ClassUsuario.pas',
   USMPaiCadastro in 'src\USMPaiCadastro.pas' {SMPaiCadastro: TDSServerModule},
-  USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule};
+  USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule},
+  UConfigDatabase in 'src\UConfigDatabase.pas',
+  UIniConfigDatabase in 'src\UIniConfigDatabase.pas';
 
 {$R *.res}
 
@@ -30,10 +30,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFPrincipal, FPrincipal);
- // Application.CreateForm(TSMCadUsuario, SMCadUsuario);
-  Application.CreateForm(TSMConexao, SMConexao);
-  SMConexao.Conexao;
-
+  // Application.CreateForm(TSMCadUsuario, SMCadUsuario);
   Application.Run;
 
 end.
