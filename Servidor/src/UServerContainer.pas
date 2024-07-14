@@ -12,10 +12,7 @@ IPPeerServer,
 IPPeerAPI,
 Datasnap.DSAuth,
 System.IniFiles,
-URegistraClasseServidora,
-USMConexao,
-UFConfDatabase;
-
+URegistraClasseServidora;
 type
   TServerContainer = class(TDataModule)
     DSServer: TDSServer;
@@ -39,7 +36,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UServerMethods, Vcl.Forms;
+  UServerMethods, Vcl.Forms, UFPrincipal;
 
 procedure TServerContainer.DataModuleCreate(Sender: TObject);
 begin
@@ -50,13 +47,14 @@ end;
 procedure TServerContainer.DSTCPServerTransportConnect(
   Event: TDSTCPConnectEventObject);
 begin
-  SMConexao.RegistraConexao(Event);
+
+  FPrincipal.Conexao.RegistraConexao(Event);
 end;
 
 procedure TServerContainer.DSTCPServerTransportDisconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
-  SMConexao.RemoveConexao;
+  FPrincipal.Conexao.RemoveConexao;
 end;
 
 end.

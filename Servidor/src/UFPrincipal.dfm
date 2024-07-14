@@ -44,6 +44,8 @@ object FPrincipal: TFPrincipal
         Height = 33
         Align = alRight
         Caption = 'X'
+        OnMouseEnter = imgStartPauseMouseEnter
+        OnMouseLeave = imgStartPauseMouseLeave
         OnClick = btnFecharClick
         ExplicitLeft = 502
       end
@@ -280,8 +282,8 @@ object FPrincipal: TFPrincipal
           0000000049454E44AE426082}
         ShowHint = True
         OnClick = imgConfigServidorClick
-        OnMouseEnter = imgConfigServidorMouseEnter
-        OnMouseLeave = imgConfigServidorMouseLeave
+        OnMouseEnter = imgStartPauseMouseEnter
+        OnMouseLeave = imgStartPauseMouseLeave
       end
       object shpDatabase: TJvShape
         Left = 397
@@ -499,8 +501,8 @@ object FPrincipal: TFPrincipal
           A29C9CBCB549338CECD701F693070A5D5EF9D6D2C80CFE356B4222048EAAA2DC
           17294D37A6FC0718EC5DB66E372B0F0000000049454E44AE426082}
         OnClick = imgConexoesClick
-        OnMouseEnter = imgConexoesMouseEnter
-        OnMouseLeave = imgConexoesMouseLeave
+        OnMouseEnter = imgStartPauseMouseEnter
+        OnMouseLeave = imgStartPauseMouseLeave
       end
       object imgConfigDatabase: TJvImage
         Left = 397
@@ -705,8 +707,8 @@ object FPrincipal: TFPrincipal
           8D84C8FE192E3E7002E182094BC17958863D7334FA045C32A71ECFB13901F7FF
           009C595E782972D4130000000049454E44AE426082}
         OnClick = imgConfigDatabaseClick
-        OnMouseEnter = imgConfigDatabaseMouseEnter
-        OnMouseLeave = imgConfigDatabaseMouseLeave
+        OnMouseEnter = imgStartPauseMouseEnter
+        OnMouseLeave = imgStartPauseMouseLeave
       end
       object lblDireitosReservados: TJvLabel
         Left = 0
