@@ -3,17 +3,18 @@ unit USMCadUsuario;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, USMPaiCadastro, Data.FMTBcd,
-  Datasnap.Provider, Data.DB, Data.SqlExpr, ClassUsuario;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  USMPaiCadastro, Data.FMTBcd, Datasnap.Provider, Data.DB, Data.SqlExpr,
+  ClassUsuario;
 
 type
   TSMCadUsuario = class(TSMPaiCadastro)
-    procedure DSServerModuleCreate(Sender: TObject);
   private
     { Private declarations }
   public
-    { Public declarations }
+  protected
+    procedure DSServerCreate_Filho(Sender: TObject); override;
   end;
 
 var
@@ -23,7 +24,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TSMCadUsuario.DSServerModuleCreate(Sender: TObject);
+procedure TSMCadUsuario.DSServerCreate_Filho(Sender: TObject);
 begin
   FClassefilha := TClassUsuario.Create;
   inherited;
@@ -31,3 +32,4 @@ begin
 end;
 
 end.
+

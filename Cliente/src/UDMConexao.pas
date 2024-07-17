@@ -9,6 +9,7 @@ uses
 type
   TDMConexao = class(TDataModule)
     SQLConnection: TSQLConnection;
+    procedure DataModuleCreate(Sender: TObject);
   private
     FInstanceOwner: Boolean;
     FServerMethodsClient: TServerMethodsClient;
@@ -20,7 +21,7 @@ type
     property InstanceOwner: Boolean read FInstanceOwner write FInstanceOwner;
     property ServerMethodsClient: TServerMethodsClient read GetServerMethodsClient write FServerMethodsClient;
 
-end;
+  end;
 
 var
   DMConexao: TDMConexao;
@@ -37,6 +38,11 @@ begin
   FInstanceOwner := True;
 end;
 
+procedure TDMConexao.DataModuleCreate(Sender: TObject);
+begin
+  SQLConnection.Connected := True;
+end;
+
 destructor TDMConexao.Destroy;
 begin
   FServerMethodsClient.Free;
@@ -48,9 +54,10 @@ begin
   if FServerMethodsClient = nil then
   begin
     SQLConnection.Open;
-    FServerMethodsClient:= TServerMethodsClient.Create(SQLConnection.DBXConnection, FInstanceOwner);
+    FServerMethodsClient := TServerMethodsClient.Create(SQLConnection.DBXConnection, FInstanceOwner);
   end;
   Result := FServerMethodsClient;
 end;
 
 end.
+
