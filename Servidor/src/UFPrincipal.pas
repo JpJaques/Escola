@@ -37,8 +37,7 @@ UFConfDatabase,
 UInicializacao,
 Data.DB,
 Vcl.Grids,
-Vcl.DBGrids,
-UMensagens;
+Vcl.DBGrids;
 
 type
   TFPrincipal = class(TForm)
@@ -90,12 +89,14 @@ type
     procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
-    MsgRetornoInicializacao : string;
-    AplicacaoIniciada       : Boolean;
-    SMConexao               : TSMConexao;
-    ServerContainer         : TServerContainer;
-    HintTrayIcon            : string;
-    GConexoes           : Boolean;
+    
+    SMConexao         : TSMConexao;
+    ServerContainer   : TServerContainer;
+    HintTrayIcon      : string;
+    FTesteConexao     : string;
+    GConexoes         : Boolean;
+    FConfirmaDBConf   : Boolean;
+
     procedure EsconderAplicacao;
     procedure ExibirMensagensStatus;
     procedure MudaCursorImagem(Sender : TObject);
@@ -177,7 +178,7 @@ begin
   Application.Terminate;
 end;
 
-{$REGION ' ConfiguraÁ„o CURSOR MOUSE BOTOES'}
+{$REGION ' Configura√ß√£o CURSOR MOUSE BOTOES'}
 
 procedure TFPrincipal.imgConfigServidorMouseEnter(Sender: TObject);
 begin
@@ -270,9 +271,20 @@ end;
 procedure TFPrincipal.PararAplicacao;
 begin
   imgStartPause.Picture.Bitmap := imgList.Items[1].Bitmap;
-  imgStartPause.Hint           := 'INICIAR APLICA«√O';
+  imgStartPause.Hint           := 'INICIAR APLICA√á√ÉO';
   ServerContainer.DSServer.Stop;
-  ExibirMensagensStatus;
+
+  lblMensagem.Font.Name  := 'Segoe UI';
+  lblMensagem.Font.Color := StringToColor('$2222B2');
+  lblMensagem.Font.Size  := 10;
+  lblMensagem.WordWrap   := True;
+  lblMensagem.Alignment  := taLeftJustify;
+  lblMensagem.Align      := alClient;
+  lblMensagem.Caption    := FTesteConexao;
+  lblStatus.Caption      := 'Servidor Desconectado';
+
+  HintTrayIcon := lblStatus.Caption;
+  TrayIcon.Hint  := HintTrayIcon;
 end;
 
 procedure TFPrincipal.Inicializar;
@@ -283,13 +295,43 @@ begin
   if (Trim(MsgRetornoInicializacao) = Conexao_Realizada) then
   begin
     imgStartPause.Picture.Bitmap := imgList.Items[0].Bitmap;
-    imgStartPause.Hint           := 'PAUSAR APLICA«√O';
+    imgStartPause.Hint           := 'PAUSAR APLICA√á√ÉO';
     ServerContainer.DSServer.Start;
   end
   else
     PararAplicacao;
+    
+end;
 
-  ExibirMensagensStatus;
+procedure TFPrincipal.IniciarAplicacao;
+begin
+  imgStartPause.Picture.Bitmap := imgList.Items[0].Bitmap;
+  imgStartPause.Hint           := 'PAUSAR APLICA√á√ÉO';
+
+  try
+
+    ServerContainer.DSServer.Start;
+
+    lblStatus.Font.Name  := 'Segoe UI';
+    lblStatus.Font.Color := StringToColor('$800000');
+    lblStatus.Font.Size  := 12;
+    lblStatus.WordWrap   := False;
+    lblStatus.Alignment  := taLeftJustify;
+    lblStatus.Caption    := 'Servidor Conectado!' + #13 + 'Porta: ' + ServerContainer.DSTCPServerTransport.Port.ToString;
+    HintTrayIcon := lblStatus.Caption;
+    TrayIcon.Hint  := HintTrayIcon;
+  except
+    on E:Exception do
+    begin
+      if Not (FTesteConexao.IsEmpty) then
+        FTesteConexao := FTesteConexao + #13 + E.Message
+      else
+        FTesteConexao := E.Message;
+
+      PararAplicacao;
+    end;
+  end;
+
 end;
 
 procedure TFPrincipal.FormCreate(Sender: TObject);
@@ -357,7 +399,7 @@ begin
       if FPrincipal.Components[I] is TJvImage then
         if not (FPrincipal.Components[I].Name = 'imgConexoes') then
           TJvImage(FPrincipal.Components[I]).Enabled := False;
-     }//CODIGO ACIMA D¡ OUT OF ARGUMENT --- ANALISANDO
+     }//CODIGO ACIMA D√Å OUT OF ARGUMENT --- ANALISANDO
 
     imgStartPause.Enabled     := False;
     imgConfigDatabase.Enabled := False;
@@ -370,7 +412,7 @@ begin
       if FPrincipal.Components[I] is TJvImage then
         if not (FPrincipal.Components[I].Name = 'imgConexoes') then
           TJvImage(I).Enabled := True;
-    } //CODIGO ACIMA D¡ OUT OF ARGUMENT --- ANALISANDO
+    } //CODIGO ACIMA D√Å OUT OF ARGUMENT --- ANALISANDO
 
     imgStartPause.Enabled     := True;
     imgConfigDatabase.Enabled := True;
