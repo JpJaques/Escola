@@ -119,15 +119,12 @@
         <DCCReference Include="src\UFConfDatabase.pas">
             <Form>FConfDatabase</Form>
         </DCCReference>
-        <DCCReference Include="src\UInicializacao.pas"/>
-        <DCCReference Include="src\UMensagens.pas"/>
         <DCCReference Include="UFSplash.pas">
             <Form>FrmSplash</Form>
         </DCCReference>
         <DCCReference Include="UFLogin.pas">
             <Form>frmLogin</Form>
         </DCCReference>
-        <DCCReference Include="src\UCelio.pas"/>
         <DCCReference Include="..\Cliente\Classes\ClassPaiCadastro.pas"/>
         <DCCReference Include="..\Cliente\Classes\ClassUsuario.pas"/>
         <DCCReference Include="src\USMPaiCadastro.pas">

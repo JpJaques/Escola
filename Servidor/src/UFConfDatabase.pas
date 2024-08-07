@@ -23,8 +23,8 @@ JvExControls,
 JvSpeedButton,
 JvLabel,
 system.IniFiles,
- JvDialogs,
- UMensagens;
+JvDialogs,
+UIniConfigDatabase;
 
 type
   TFConfDatabase = class(TForm)
@@ -49,11 +49,7 @@ type
     procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
-    FCaminho:           string;
-    FUsername:          string;
-    FSenha:             string;
-    FMensagem:          string;
-    MensagemHabilitada: Boolean;
+    FIni:      TIniConfigDatabase;
     function IIF(Expressao : Variant; RetornoVerdadeiro : Variant; RetornoFalse : Variant): Variant;
   public
     procedure TestaConexao;
