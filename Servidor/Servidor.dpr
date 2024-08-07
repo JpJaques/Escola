@@ -16,12 +16,11 @@ uses
   System.SysUtils {FrmSplash},
   Vcl.Themes,
   Vcl.Styles,
+  UCelio in 'src\UCelio.pas',
   ClassPaiCadastro in '..\Cliente\Classes\ClassPaiCadastro.pas',
   ClassUsuario in '..\Cliente\Classes\ClassUsuario.pas',
   USMPaiCadastro in 'src\USMPaiCadastro.pas' {SMPaiCadastro: TDSServerModule},
-  USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule},
-  UConfigDatabase in 'src\UConfigDatabase.pas',
-  UIniConfigDatabase in 'src\UIniConfigDatabase.pas';
+  USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule};
 
 {$R *.res}
 
@@ -29,7 +28,10 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFPrincipal, FPrincipal);
-  // Application.CreateForm(TSMCadUsuario, SMCadUsuario);
+ // Application.CreateForm(TSMCadUsuario, SMCadUsuario);
+  Application.CreateForm(TSMConexao, SMConexao);
+  SMConexao.Conexao;
+
   Application.Run;
 
 end.

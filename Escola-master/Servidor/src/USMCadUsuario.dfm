@@ -1,0 +1,2 @@
+inherited SMCadUsuario: TSMCadUsuario
+end

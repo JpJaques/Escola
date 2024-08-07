@@ -14,6 +14,7 @@ type
     dbSenha: TDBEdit;
     Usuário: TLabel;
     Senha: TLabel;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -25,6 +26,17 @@ var
 
 implementation
 
+ uses
+ UDMCadUsuario;
+
+
 {$R *.dfm}
 
-end.
+procedure TFCadUsuarios.FormCreate(Sender: TObject);
+begin
+  DMCadastro := TDMCadUsuario.Create(self);
+  inherited;
+
+end;
+
+End.

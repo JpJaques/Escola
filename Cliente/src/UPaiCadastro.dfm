@@ -23,7 +23,6 @@ object FPaiCadastro: TFPaiCadastro
     Align = alTop
     TabOrder = 0
     OnExit = PanelPaiExit
-    ExplicitWidth = 943
     object Codigo: TLabel
       Left = 14
       Top = 14
@@ -88,10 +87,6 @@ object FPaiCadastro: TFPaiCadastro
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = 'Principal'
-      ExplicitLeft = 0
-      ExplicitTop = 21
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object Panel2: TPanel

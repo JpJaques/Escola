@@ -48,21 +48,21 @@ type
     procedure edtCaminhoMouseLeave(Sender: TObject);
     procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FIni:      TIniConfigDatabase;
     function IIF(Expressao : Variant; RetornoVerdadeiro : Variant; RetornoFalse : Variant): Variant;
-
   public
-    Function TestaConexao:String;
+    procedure TestaConexao;
 
   end;
 
+var
+  FConfDatabase: TFConfDatabase;
 
 implementation
+
 uses
-  UFPrincipal;
+  Data.SqlExpr;
 
 {$R *.dfm}
 
@@ -71,29 +71,42 @@ uses
 
 procedure TFConfDatabase.btnCancelarClick(Sender: TObject);
 begin
-  FPrincipal.ConfirmaDBConf := False;
   Close;
 end;
 
 procedure TFConfDatabase.btnConfirmarClick(Sender: TObject);
 var
-  LCaminho: string;
+  INI     : TIniFile;
+  Arquivo : string;
 begin
-  FIni.SetUserName(edtUsuario.Text);
-  FIni.SetPassword(edtSenha.Text);
-  FIni.SetHostname(edtHostname.Text);
-  FIni.SetPorta(edtPorta.Text);
+  FCaminho  := edtHostname.Text + '/' + edtPorta.Text + ':' + edtCaminho.Text;
+  FUsername := edtUsuario.Text;
+  FSenha    := edtSenha.Text;
 
-  if not(Pos('/',edtCaminho.Text) > 0) then
-  begin
-    LCaminho := edtHostname.Text + '/' + edtPorta.Text + ':' + edtCaminho.Text;
-    FIni.SetDatabase(LCaminho)
-  end
-  else
-    FIni.SetDatabase(edtCaminho.Text);
+  Arquivo   := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
+  INI       := TIniFile.Create(Arquivo);
+  try
+    if not INI.SectionExists('DATABASE') then
+    begin
+      INI.WriteString('DATABASE', 'DATABASE',FCaminho);
+      INI.WriteString('DATABASE', 'USERNAME',FUsername);
+      INI.WriteString('DATABASE', 'SENHA',FSenha);
+    end
+    else
+    begin
+      if (FCaminho <> INI.ReadString('DATABASE','DATABASE','')) then
+        INI.WriteString('DATABASE', 'DATABASE',FCaminho)
+      else if (FUsername <> INI.ReadString('DATABASE','USERNAME','')) then
+        INI.WriteString('DATABASE', 'USERNAME',FUsername)
+      else if (FSenha <> INI.ReadString('DATABASE','SENHA','')) then
+        INI.WriteString('DATABASE', 'SENHA',FSenha);
+    end;
 
-  FPrincipal.ConfirmaDBConf := True;
-  Self.Close;
+    Close;
+  finally
+    INI.Free;
+  end;
+
 end;
 
 procedure TFConfDatabase.edtCaminhoDblClick(Sender: TObject);
@@ -117,25 +130,30 @@ begin
   edtCaminho.ShowHint := False;
 end;
 
-procedure TFConfDatabase.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  FIni.Free;
-  Action := caFree;
-end;
-
 procedure TFConfDatabase.FormCreate(Sender: TObject);
+var
+  INI:     TIniFile;
+  Arquivo: string;
 begin
-// Seta a Classe de Config do Ini
-  FIni := TIniConfigDatabase.Create;
-end;
+  Arquivo := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
+  INI     := TIniFile.Create(Arquivo);
 
-procedure TFConfDatabase.FormShow(Sender: TObject);
-begin
-  edtPorta.Text    := FIni.GetPorta;
-  edtSenha.Text    := FIni.GetPassword;
-  edtHostname.Text := FIni.GetHostname;
-  edtUsuario.Text  := FIni.GetUserName;
-  edtCaminho.Text  := FIni.GetDatabase;
+  if not INI.SectionExists('DATABASE') then
+  begin
+   edtHostname.Text := 'LOCALHOST';
+   edtPorta.Text    := '3055';
+   edtCaminho.Text  := ChangeFilePath((ExtractFilePath(Application.ExeName + 'CONF')+'DATABASE'),'.FDB');
+   edtUsuario.Text  := 'SYSDBA';
+   edtSenha.Text    := 'masterkey';
+  end
+  else
+  begin
+   edtHostname.Text := INI.ReadString('DATABASE','HOSTNAME','');
+   edtPorta.Text    := INI.ReadString('DATABASE','PORTA','');
+   edtCaminho.Text  := INI.ReadString('DATABASE','DATABASE','');
+   edtUsuario.Text  := INI.ReadString('DATABASE','USERNAME','');
+   edtSenha.Text    := INI.ReadString('DATABASE','SENHA','');
+  end;
 end;
 
 function TFConfDatabase.IIF(Expressao, RetornoVerdadeiro,RetornoFalse: Variant): Variant;
@@ -155,37 +173,74 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-Function TFConfDatabase.TestaConexao:String;
-var
-  LDatabase:string;
-begin
-  if not(Pos('/',edtCaminho.Text) > 0) then
-    LDatabase := edtHostname.Text + '/' + edtPorta.Text + ':' + edtCaminho.Text
-  else
-    LDatabase := edtCaminho.Text;
-
-  Result := FPrincipal.Conexao.TestaConexao(edtUsuario.Text,
-                                  edtSenha.Text,
-                                  LDatabase);
-end;
-
 procedure TFConfDatabase.btnTestarClick(Sender: TObject);
 begin
-  lblMensagem.Caption := '';
+  TestaConexao;
+end;
 
-  // Realizar Teste de Conexão com os Paremetros que estão na Tela
-  if TestaConexao.IsEmpty then
-  begin
-    lblMensagem.Caption := 'Conexão Realizada Com Sucesso!';
-    lblMensagem.Font.Color := clGreen;
-    lblMensagem.Font.Size := 10;
-  end
-  else
-  begin
-    lblMensagem.Caption := TestaConexao;
-    lblMensagem.Font.Color := clRed;
-    lblMensagem.Font.Size := 10;
+procedure TFConfDatabase.TestaConexao;
+var
+  Conexao : TSQLConnection;
+  PathComp: string;
+begin
+  lblMensagem.Caption := '';
+  lblMensagem.WordWrap := True;
+  Conexao  := TSQLConnection.Create(self);
+  try
+    try
+      Conexao.Close;
+      Conexao.DriverName     := 'Firebird';
+      Conexao.ConnectionName := 'FBConnection';
+      Conexao.LoginPrompt    := False;
+      Conexao.Params.Clear;
+      Conexao.Params.Text :=
+          'DriverUnit=Data.DBXFirebird' + #13 +
+          'DriverPackageLoader=TDBXDynalinkDriverLoader,DbxCommonDriver240.bpl' + #13 +
+          'DriverAssemblyLoader=Borland.Data.TDBXDynalinkDriverLoader,Borland.Data.DbxCommonDriver,Version=24.0.0.0,Culture=neutral,PublicKeyToken=91d62ebb5b0d1b1b' + #13 +
+          'MetaDataPackageLoader=TDBXFirebirdMetaDataCommandFactory,DbxFirebirdDriver240.bpl' + #13 +
+          'MetaDataAssemblyLoader=Borland.Data.TDBXFirebirdMetaDataCommandFactory,Borland.Data.DbxFirebirdDriver,Version=24.0.0.0,Culture=neutral,PublicKeyToken=91d62ebb5b0d1b1b' + #13 +
+          'GetDriverFunc=getSQLDriverINTERBASE' + #13 +
+          'LibraryName=dbxfb.dll' + #13 +
+          'LibraryNameOsx=libsqlfb.dylib' + #13 +
+          'VendorLib=fbclient.dll' + #13 +
+          'VendorLibWin64=fbclient.dll' + #13 +
+          'VendorLibOsx=/Library/Frameworks/Firebird.framework/Firebird' + #13 +
+          'Database=' + edtCaminho.Text + #13 +
+          'User_Name=' + edtUsuario.Text + #13 +
+          'Password=' + edtSenha.Text + #13 +
+          'Role=RoleName' + #13 +
+          'MaxBlobSize=-1' + #13 +
+          'LocaleCode=0000' + #13 +
+          'IsolationLevel=ReadCommitted' + #13 +
+          'SQLDialect=3' + #13 +
+          'CommitRetain=False' + #13 +
+          'WaitOnLocks=True' + #13 +
+          'TrimChar=False' + #13 +
+          'BlobSize=-1' + #13 +
+          'ErrorResourceFile=' + #13 +
+          'RoleName=RoleName' + #13 +
+          'ServerCharSet=' + #13 +
+          'Trim Char=False';
+
+      Conexao.Open;
+
+      lblMensagem.Caption    := Conexao_Realizada + #13 +  PathComp;
+      lblMensagem.Font.Color := clGreen;
+      lblMensagem.Font.Size  := 15;
+      Conexao.Close;
+    except
+      on Ex:Exception do
+      begin
+        lblMensagem.Caption := Format(Erro,[Ex.Message]);
+        lblMensagem.Font.Color := clRed;
+        lblMensagem.Font.Size  := 15;
+      end;
+    end;
+   Conexao.Close;
+  finally
+   Conexao.Free;
   end;
+
 
 end;
 
