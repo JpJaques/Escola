@@ -24,7 +24,6 @@ JvSpeedButton,
 JvLabel,
 system.IniFiles,
 JvDialogs,
-UMensagens,
 UIniConfigDatabase;
 
 type
@@ -52,12 +51,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    FCaminho:  string;
-    FUsername: string;
-    FSenha:    string;
-    FMensagem: string;
     FIni:      TIniConfigDatabase;
-    MensagemHabilitada: Boolean;
     function IIF(Expressao : Variant; RetornoVerdadeiro : Variant; RetornoFalse : Variant): Variant;
 
   public

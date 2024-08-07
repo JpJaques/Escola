@@ -12,7 +12,6 @@ uses
   UExpositoraClasse in 'src\UExpositoraClasse.pas',
   USMConexao in 'src\USMConexao.pas' {SMConexao: TDSServerModule},
   UFConfDatabase in 'src\UFConfDatabase.pas' {FConfDatabase},
-  UMensagens in 'src\UMensagens.pas',
   Vcl.Dialogs,
   System.SysUtils {FrmSplash},
   Vcl.Themes,

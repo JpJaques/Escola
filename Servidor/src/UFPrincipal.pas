@@ -36,8 +36,7 @@ USMConexao,
 UFConfDatabase,
 Data.DB,
 Vcl.Grids,
-Vcl.DBGrids,
-UMensagens;
+Vcl.DBGrids;
 
 type
   TFPrincipal = class(TForm)
@@ -81,7 +80,7 @@ type
     procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure imgConfigServidorClick(Sender: TObject);
   private
-    AplicacaoIniciada : Boolean;
+
     SMConexao         : TSMConexao;
     ServerContainer   : TServerContainer;
     HintTrayIcon      : string;
@@ -221,7 +220,7 @@ begin
   lblMensagem.Alignment  := taLeftJustify;
   lblMensagem.Align      := alClient;
   lblMensagem.Caption    := FTesteConexao;
-  lblStatus.Caption      := ServidorDesconectado;
+  lblStatus.Caption      := 'Servidor Desconectado';
 
   HintTrayIcon := lblStatus.Caption;
   TrayIcon.Hint  := HintTrayIcon;
@@ -253,7 +252,7 @@ begin
     lblStatus.Font.Size  := 12;
     lblStatus.WordWrap   := False;
     lblStatus.Alignment  := taLeftJustify;
-    lblStatus.Caption    := Format(ServidorConectado,[IntToStr(ServerContainer.DSTCPServerTransport.Port)]);
+    lblStatus.Caption    := 'Servidor Conectado!' + #13 + 'Porta: ' + ServerContainer.DSTCPServerTransport.Port.ToString;
     HintTrayIcon := lblStatus.Caption;
     TrayIcon.Hint  := HintTrayIcon;
   except
