@@ -21,7 +21,8 @@ uses
   USMPaiCadastro in 'src\USMPaiCadastro.pas' {SMPaiCadastro: TDSServerModule},
   USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule},
   UConfigDatabase in 'src\UConfigDatabase.pas',
-  UIniConfigDatabase in 'src\UIniConfigDatabase.pas';
+  UIniConfigDatabase in 'src\UIniConfigDatabase.pas',
+  UMetadataDatabase in 'src\UMetadataDatabase.pas';
 
 {$R *.res}
 

@@ -1,9 +1,9 @@
 object FConfDatabase: TFConfDatabase
   Left = 0
   Top = 0
-  BorderStyle = bsNone
-  ClientHeight = 234
-  ClientWidth = 375
+  BorderIcons = [biSystemMenu]
+  ClientHeight = 334
+  ClientWidth = 537
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object FConfDatabase: TFConfDatabase
   object pnlFundo: TJvPanel
     Left = 0
     Top = 0
-    Width = 375
-    Height = 234
+    Width = 537
+    Height = 334
     Align = alClient
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -30,24 +30,24 @@ object FConfDatabase: TFConfDatabase
     TabOrder = 0
     OnMouseDown = pnlFundoMouseDown
     object btnConfirmar: TJvSpeedButton
-      Left = 235
-      Top = 153
+      Left = 222
+      Top = 212
       Width = 80
       Height = 25
       Caption = 'Confirmar'
       OnClick = btnConfirmarClick
     end
     object btnTestar: TJvSpeedButton
-      Left = 140
-      Top = 153
+      Left = 127
+      Top = 212
       Width = 78
       Height = 25
       Caption = 'Testar'
       OnClick = btnTestarClick
     end
     object btnCancelar: TJvSpeedButton
-      Left = 49
-      Top = 153
+      Left = 36
+      Top = 212
       Width = 78
       Height = 25
       Caption = 'Cancelar'
@@ -55,8 +55,8 @@ object FConfDatabase: TFConfDatabase
     end
     object lblMensagem: TJvLabel
       Left = 0
-      Top = 217
-      Width = 371
+      Top = 317
+      Width = 533
       Height = 13
       Align = alBottom
       Transparent = True
@@ -64,8 +64,8 @@ object FConfDatabase: TFConfDatabase
     end
     object edtHostname: TJvEdit
       Left = 6
-      Top = 32
-      Width = 166
+      Top = 10
+      Width = 185
       Height = 21
       Hint = 'HOSTNAME DATABASE'
       Flat = False
@@ -78,8 +78,8 @@ object FConfDatabase: TFConfDatabase
       TextHint = 'HOSTNAME'
     end
     object edtPorta: TJvEdit
-      Left = 182
-      Top = 32
+      Left = 7
+      Top = 38
       Width = 63
       Height = 21
       Hint = 'PORTA DATABASE'
@@ -96,7 +96,7 @@ object FConfDatabase: TFConfDatabase
     object edtCaminho: TJvEdit
       Left = 6
       Top = 72
-      Width = 358
+      Width = 475
       Height = 21
       Hint = 'Click 2 Vezes para Abir Caixa de Pesquisa'
       Flat = False
@@ -125,8 +125,8 @@ object FConfDatabase: TFConfDatabase
       TextHint = 'USERNAME'
     end
     object edtSenha: TJvEdit
-      Left = 191
-      Top = 112
+      Left = 7
+      Top = 141
       Width = 152
       Height = 21
       Hint = 'SYSDBA, ADMIN'
@@ -138,11 +138,29 @@ object FConfDatabase: TFConfDatabase
       Text = ''
       TextHint = 'SENHA'
     end
+    object btnMetadata: TButton
+      Left = 320
+      Top = 212
+      Width = 91
+      Height = 25
+      Caption = 'Gerar Metadata'
+      TabOrder = 5
+      OnClick = btnMetadataClick
+    end
+    object Button1: TButton
+      Left = 417
+      Top = 212
+      Width = 91
+      Height = 25
+      Caption = 'Criar Database'
+      TabOrder = 6
+      OnClick = Button1Click
+    end
   end
   object DialogoDatabase: TJvOpenDialog
     Height = 0
     Width = 0
-    Left = 240
-    Top = 16
+    Left = 312
+    Top = 8
   end
 end

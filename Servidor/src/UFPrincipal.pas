@@ -168,7 +168,7 @@ end;
 
 procedure TFPrincipal.imgStartPauseClick(Sender: TObject);
 begin
-  if ServerContainer.DSServer.Started then
+  if (ServerContainer.DSServer.Started) then
     PararAplicacao
   else
     Inicializar;
@@ -308,8 +308,6 @@ begin
 end;
 
 procedure TFPrincipal.Travar_Destravar_Imagens;
-var
-  I : Integer;
 begin
   if GConexoes then
   begin
