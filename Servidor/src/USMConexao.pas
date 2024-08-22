@@ -16,7 +16,9 @@ UFConfDatabase,
 Vcl.Forms,
 Data.DBXFirebird,
 Datasnap.DBClient,
-Datasnap.DSTCPServerTransport;
+Datasnap.DSTCPServerTransport,
+Data.DBXCommon,
+System.StrUtils;
 
 type
   TSMConexao = class(TDSServerModule)
@@ -25,7 +27,6 @@ type
   private
     FControleConexao : TDictionary<Integer,TSQLConnection>;
     function GetConection : TSQLConnection;
-
   public
     CDSConexao : TClientDataSet;
     property Conexao: TSQLConnection read GetConection;
@@ -34,6 +35,9 @@ type
     procedure RemoveConexao;
     function  TestaConexao:string; overload;
     function  TestaConexao(const AUser, ASenha, ADatabase: String):string; overload;
+    function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
+    function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
+    procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
   end;
 
 implementation
@@ -57,6 +61,110 @@ end;
 procedure TSMConexao.DSServerModuleDestroy(Sender: TObject);
 begin
   CDSConexao.Free;
+end;
+
+procedure TSMConexao.ExecuteCommand(ASQL: string; AParam: TParams; CriarTransacao: Boolean);
+var
+  Transacao: TDBXTransaction;
+begin
+  if CriarTransacao then
+  begin
+    GetConection.HasTransaction(Transacao);
+    GetConection.BeginTransaction;
+  end;
+
+  try
+    GetConection.Execute(ASQL, AParam);
+
+    if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+
+  except on E:Exception do
+    begin
+      if GetConection.InTransaction then GetConection.RollbackFreeAndNil(Transacao);
+
+      raise Exception.Create('Erro na Execução do Comando: ' + E.Message);
+    end;
+  end;
+end;
+
+function TSMConexao.ExecuteReader(ASQL: String;CriarTransacao: Boolean): OleVariant;
+var
+  Transacao: TDBXTransaction;
+  LSQLDS:    TSQLDataSet;
+begin
+  LSQLDS := TSQLDataSet.Create(Nil);
+
+  try
+    LSQLDS.SQLConnection := GetConection;
+    LSQLDS.CommandText   := ASQL;
+
+    if CriarTransacao then
+    begin
+      GetConection.HasTransaction(Transacao);
+      GetConection.BeginTransaction;
+    end;
+
+    try
+
+      Result := LSQLDS.ExecSQL;
+
+      if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+
+    except
+      on E:Exception do
+      begin
+        if GetConection.InTransaction then GetConection.RollbackFreeAndNil(Transacao);
+
+        raise Exception.Create('Falha ao Executar: ' + #13 + E.Message);
+
+      end;
+
+    end;
+
+  finally
+    LSQLDS.Free;
+  end;
+end;
+
+function TSMConexao.ExecuteScalar(ASQL: string;CriarTransacao: Boolean): Variant;
+var
+  Transacao: TDBXTransaction;
+  LSQLDS:    TSQLDataSet;
+begin
+  LSQLDS := TSQLDataSet.Create(Nil);
+
+  try
+    LSQLDS.SQLConnection := GetConection;
+    LSQLDS.CommandText   := ASQL;
+
+    try
+      LSQLDS.ExecSQL;
+
+      case LSQLDS.Fields[0].DataType of
+        ftString:   Result := LSQLDS.Fields[0].AsString;
+        ftInteger:  Result := LSQLDS.Fields[0].AsInteger;
+        ftLargeint: Result := LSQLDS.Fields[0].AsLargeInt;
+        ftCurrency: Result := LSQLDS.Fields[0].AsCurrency;
+        ftDateTime: Result := LSQLDS.Fields[0].AsDateTime;
+        ftBoolean:  Result := LSQLDS.Fields[0].AsBoolean;
+      else
+        Result := LSQLDS.Fields[0].AsVariant;
+      end;
+
+      if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+
+    except on E:Exception do
+      begin
+        if GetConection.InTransaction then GetConection.RollbackFreeAndNil(Transacao);
+
+        raise Exception.Create('Erro ao Executar: ' + #13 + E.Message);
+      end;
+    end;
+
+
+  finally
+    LSQLDS.Free;
+  end;
 end;
 
 function TSMConexao.GetConection: TSQLConnection;

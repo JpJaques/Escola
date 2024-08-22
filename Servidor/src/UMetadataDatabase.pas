@@ -17,8 +17,6 @@ type
       Class procedure AntesConectar(Sender: TObject);
       class function RetornaPathDB:string;
       class procedure CriaMetadata;
-
-
       class procedure ExecutaShell(Const AAplicacao,AComando,ACaminhoExecucao: String);
   public
     Class Procedure GerarMetadata;
