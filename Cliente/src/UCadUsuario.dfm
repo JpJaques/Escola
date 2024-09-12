@@ -1,10 +1,8 @@
 ﻿inherited FCadUsuarios: TFCadUsuarios
   Caption = 'Cadastro de Usu'#225'rios'
+  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 13
-  inherited PanelPai: TPanel
-    ExplicitWidth = 632
-  end
   inherited PageControl1: TPageControl
     inherited TabSheet1: TTabSheet
       ExplicitLeft = 4

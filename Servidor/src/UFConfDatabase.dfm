@@ -12,9 +12,7 @@ object FConfDatabase: TFConfDatabase
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnClose = FormClose
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnlFundo: TJvPanel
@@ -60,7 +58,6 @@ object FConfDatabase: TFConfDatabase
       Height = 13
       Align = alBottom
       Transparent = True
-      ExplicitWidth = 5
     end
     object edtHostname: TJvEdit
       Left = 6
