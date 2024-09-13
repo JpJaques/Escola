@@ -19,32 +19,30 @@ Datasnap.DBClient,
 Datasnap.DSTCPServerTransport,
 Data.DBXCommon,
 System.StrUtils,
-Datasnap.DSTCPServerTransport,
 Data.FMTBcd,
 Datasnap.Provider;
 
 type
   TSMConexao = class(TDSServerModule)
-    SQLDS: TSQLDataSet;
-    DSP: TDataSetProvider;
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DSServerModuleDestroy(Sender: TObject);
-    function ExecuteScalar(SQL: string): Variant;
-    function ExecuteReader(SQL: string): OleVariant;
-    function GerarCodigo(NomeGenerator: string): integer;
+
+
   private
     FControleConexao : TDictionary<Integer,TSQLConnection>;
     function GetConection : TSQLConnection;
+
   public
-    CDSConexao: TClientDataSet;
+    CDSConexao : TClientDataSet;
     property Conexao: TSQLConnection read GetConection;
     procedure CriaCDSMonitorarConexoes;
-    procedure RegistraConexao(Conexao: TDSTCPConnectEventObject);
+    procedure RegistraConexao(Conexao : TDSTCPConnectEventObject);
     procedure RemoveConexao;
-    procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
-	function  TestaConexao:string; overload;
+    function GerarCodigo(NomeGenerator: string): integer;
+    function  TestaConexao:string; overload;
     function  TestaConexao(const AUser, ASenha, ADatabase: String):string; overload;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
+    procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
     function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
   end;
 
@@ -52,6 +50,8 @@ var
   SMConexao: TSMConexao;
 
 implementation
+  uses
+    UConfigDatabase;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -62,11 +62,9 @@ implementation
 
 procedure TSMConexao.DSServerModuleCreate(Sender: TObject);
 begin
-  FControleConexao := TDictionary<Integer, TSQLConnection>.Create();
-  CDSConexao := TClientDataSet.Create(self);
-  CriaCDSMonitorarConexoes;
-  SQLDS.SQLConnection:= Conexao;
-  DSP.Dataset:= SQLDS;
+ FControleConexao := TDictionary<Integer,TSQLConnection>.Create();
+ CDSConexao       := TClientDataSet.Create(self);
+ CriaCDSMonitorarConexoes;
 end;
 
 procedure TSMConexao.DSServerModuleDestroy(Sender: TObject);
@@ -176,22 +174,7 @@ begin
   finally
     LSQLDS.Free;
   end;
-end;  
 
-function TSMConexao.ExecuteReader(SQL: string): OleVariant;
-begin
- SQLDS.Close;
- SQLDS.CommandText:= SQL;
- SQLDS.Open;
- Result:= DSP.Data;
-end;
-
-function TSMConexao.ExecuteScalar(SQL: string): Variant;
-begin
- SQLDS.Close;
- SQLDS.CommandText:=SQL;
- SQLDS.Open;
- Result:= SQLDS.Fields[0].AsVariant;
 end;
 
 function TSMConexao.GerarCodigo(NomeGenerator: string): integer;
@@ -201,22 +184,27 @@ end;
 
 function TSMConexao.GetConection: TSQLConnection;
 var
-  Con: TSQLConnection;
+  Con : TSQLConnection;
+  DBParamConfig : TConfigDatabase;
 begin
   if FControleConexao.ContainsKey(GetCurrentThreadId) then
     Result := FControleConexao.Items[GetCurrentThreadId]
   else
   begin
-    Con := TSQLConnection.Create(nil);
-    Con.DriverName := 'Firebird';
-    Con.ConnectionName := 'FBConnection';
-    Con.LoginPrompt := False;
-    Con.Params.Clear;
-    Con.Params.Text := UInicializacao.Retorna_Param_Conexao_Database();
+    Con                := TSQLConnection.Create(nil);
+    DBParamConfig      := TConfigDatabase.Create(self);
 
-    FControleConexao.Add(GetCurrentThreadId, Con);
+    Con.DriverName     := 'Firebird';
+    Con.ConnectionName := 'FBConnection';
+    Con.LoginPrompt    := False;
+
+    Con.Params.Clear;
+    Con.Params.Text    := DBParamConfig.GetParams;
+
+    FControleConexao.Add(GetCurrentThreadId,Con);
     Result := Con;
 
+    DBParamConfig.Free;
   end;
 end;
 
@@ -230,19 +218,19 @@ begin
     FieldDefs.Add('IP', ftString, 15, False);
     FieldDefs.Add('MODULO', ftString, 30, False);
     CreateDataSet;
-    LogChanges := False;
+    LogChanges      := False;
     IndexFieldNames := 'ID';
   end;
 end;
 
-procedure TSMConexao.RegistraConexao(Conexao: TDSTCPConnectEventObject);
+procedure TSMConexao.RegistraConexao(Conexao : TDSTCPConnectEventObject);
 begin
   if CDSConexao.IsEmpty then
     CDSConexao.Insert
   else
     CDSConexao.Append;
 
-  CDSConexao.FieldByName('IP').AsString := Conexao.Channel.ChannelInfo.ClientInfo.IpAddress;
+  CDSConexao.FieldByName('IP').AsString  := Conexao.Channel.ChannelInfo.ClientInfo.IpAddress;
   CDSConexao.FieldByName('ID').AsInteger := GetCurrentThreadId;
   CDSConexao.Post;
 end;
@@ -258,6 +246,76 @@ begin
       CDSConexao.Delete;
 
     CDSConexao.Post;
+  end;
+
+end;
+
+function TSMConexao.TestaConexao(const AUser, ASenha,ADatabase: String): string;
+  var
+  Con : TSQLConnection;
+  DBParamConfig : TConfigDatabase;
+begin
+  try
+
+    Con                := TSQLConnection.Create(nil);
+    DBParamConfig      := TConfigDatabase.Create(self);
+
+    Con.DriverName     := 'Firebird';
+    Con.ConnectionName := 'FBConnection';
+    Con.LoginPrompt    := False;
+
+    Con.Params.Clear;
+    Con.Params.Text    := DBParamConfig.GetParams(AUser,ASenha,ADatabase);
+
+    try
+      Con.Open;
+      Result := '';
+      Con.Close;
+    except
+      on E: Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+
+  finally
+    DBParamConfig.Free;
+    Con.Free;
+  end;
+
+end;
+
+function TSMConexao.TestaConexao: string;
+var
+  Con : TSQLConnection;
+  DBParamConfig : TConfigDatabase;
+begin
+  try
+
+    Con                := TSQLConnection.Create(nil);
+    DBParamConfig      := TConfigDatabase.Create(self);
+
+    Con.DriverName     := 'Firebird';
+    Con.ConnectionName := 'FBConnection';
+    Con.LoginPrompt    := False;
+
+    Con.Params.Clear;
+    Con.Params.Text    := DBParamConfig.GetParams;
+
+    try
+      Con.Open;
+      Result := '';
+      Con.Close;
+    except
+      on E: Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+
+  finally
+    DBParamConfig.Free;
+    Con.Free;
   end;
 
 end;
