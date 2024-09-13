@@ -15,7 +15,13 @@ type
     FCodigoAtual: Integer;
   public
     FClassFilha: TClassPaiCadastro;
-    property CodigoAtual: Integer read FCodigoAtual write FCodigoAtual;
+    //property CodigoAtual: Integer read FCodigoAtual write FCodigoAtual;//VERIFICAR O MOTIVO COM JOAO
+    procedure AbrirRegistro(codigo:Integer);
+    procedure ProximoCodigo;
+    procedure Anterior;
+    procedure UltimoCOdigo;
+    procedure Primeiro;
+    Property CodigoAtual: Integer read FCodigoAtual;
   end;
 
 var
@@ -26,6 +32,23 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TDMPaiCadastro.AbrirRegistro(codigo: Integer);
+begin
+ if codigo > 0 then begin
+    FcodigoAtual:= Codigo;
+    CDSCadastro.Close;
+
+    // SQLDS.ParamByName('COD').AsInteger:=codigo;
+    CDSCadastro.FetchParams;
+    CDSCadastro.Open;
+  end;
+end;
+
+procedure TDMPaiCadastro.Anterior;
+begin
+
+end;
 
 procedure TDMPaiCadastro.CDSCadastroBeforeOpen(DataSet: TDataSet);
 var
@@ -49,6 +72,21 @@ begin
 
   CDSCadastro.FetchParams;
   CDSCadastro.Open;
+end;
+
+procedure TDMPaiCadastro.Primeiro;
+begin
+
+end;
+
+procedure TDMPaiCadastro.ProximoCodigo;
+begin
+
+end;
+
+procedure TDMPaiCadastro.UltimoCOdigo;
+begin
+
 end;
 
 end.

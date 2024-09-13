@@ -1,4 +1,4 @@
-unit UFPrincipal;
+﻿unit UFPrincipal;
 
 interface
 
@@ -34,7 +34,6 @@ Vcl.ImgList,
 JvImageList,
 USMConexao,
 UFConfDatabase,
-UInicializacao,
 Data.DB,
 Vcl.Grids,
 Vcl.DBGrids;
@@ -71,43 +70,35 @@ type
     DS: TDataSource;
     procedure btnFecharClick(Sender: TObject);
     procedure ppmFecharClick(Sender: TObject);
-    procedure TrayIconDblClick(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure imgConfigServidorMouseEnter(Sender: TObject);
-    procedure imgConfigServidorMouseLeave(Sender: TObject);
-    procedure imgConfigServidorClick(Sender: TObject);
+    procedure TrayIconDblClick(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure FormCreate(Sender: TObject);
-    procedure imgConfigDatabaseMouseEnter(Sender: TObject);
-    procedure imgConfigDatabaseMouseLeave(Sender: TObject);
-    procedure imgConexoesMouseLeave(Sender: TObject);
-    procedure imgConexoesMouseEnter(Sender: TObject);
     procedure imgStartPauseMouseEnter(Sender: TObject);
     procedure imgStartPauseMouseLeave(Sender: TObject);
     procedure imgConfigDatabaseClick(Sender: TObject);
     procedure imgStartPauseClick(Sender: TObject);
     procedure imgConexoesClick(Sender: TObject);
-    procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
+    procedure imgConfigServidorClick(Sender: TObject);
   private
-    
+
     SMConexao         : TSMConexao;
     ServerContainer   : TServerContainer;
     HintTrayIcon      : string;
     FTesteConexao     : string;
     GConexoes         : Boolean;
     FConfirmaDBConf   : Boolean;
-
     procedure EsconderAplicacao;
-    procedure ExibirMensagensStatus;
     procedure MudaCursorImagem(Sender : TObject);
     procedure Inicializar;
+    procedure IniciarAplicacao;
     procedure PararAplicacao;
     procedure MostrarConexoes;
     procedure Travar_Destravar_Imagens;
-
+    procedure ExibirMensagensStatus;
 
   public
-
+    property Conexao : TSMConexao read SMConexao;
+    property ConfirmaDBConf: Boolean read FConfirmaDBConf write FConfirmaDBConf;
   end;
 
 var
@@ -137,8 +128,7 @@ begin
   if (Trim(lblStatus.Caption) <> '') then
     lblStatus.Caption := '';
 
-  if not (ServerContainer.DSServer.Started) or
-    (Trim(MsgRetornoInicializacao) <> Conexao_Realizada) then
+  if not (ServerContainer.DSServer.Started) then
   begin
     lblMensagem.Font.Name  := 'Segoe UI';
     lblMensagem.Font.Color := StringToColor('$2222B2');
@@ -146,26 +136,24 @@ begin
     lblMensagem.WordWrap   := True;
     lblMensagem.Alignment  := taLeftJustify;
     lblMensagem.Align      := alClient;
-    lblMensagem.Caption    := MsgRetornoInicializacao;
-    lblStatus.Caption      := ServidorDesconectado;
-
+    lblMensagem.Caption    := FTesteConexao;
+    lblStatus.Caption      := 'Servidor Desconectado';
   end
   else
   begin
-
-      lblStatus.Font.Name  := 'Segoe UI';
-      lblStatus.Font.Color := StringToColor('$800000');
-      lblStatus.Font.Size  := 12;
-      lblStatus.WordWrap   := False;
-      lblStatus.Alignment  := taLeftJustify;
-      lblStatus.Caption    := Format(ServidorConectado,[IntToStr(ServerContainer.DSTCPServerTransport.Port)]);
+    lblStatus.Font.Name  := 'Segoe UI';
+    lblStatus.Font.Color := StringToColor('$800000');
+    lblStatus.Font.Size  := 12;
+    lblStatus.WordWrap   := False;
+    lblStatus.Alignment  := taLeftJustify;
+    lblStatus.Caption    := Format('Servidor Conectado na Porta %d',[ServerContainer.DSTCPServerTransport.Port]);
   end;
+
   HintTrayIcon := lblStatus.Caption;
   TrayIcon.Hint  := HintTrayIcon;
 end;
 
-procedure TFPrincipal.pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TFPrincipal.pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
 begin
   Screen.Cursor := crSizeAll;
   ReleaseCapture;
@@ -176,26 +164,6 @@ end;
 procedure TFPrincipal.ppmFecharClick(Sender: TObject);
 begin
   Application.Terminate;
-end;
-
-{$REGION ' Configuração CURSOR MOUSE BOTOES'}
-
-procedure TFPrincipal.imgConfigServidorMouseEnter(Sender: TObject);
-begin
-  MudaCursorImagem(Sender);
-end;
-
-procedure TFPrincipal.imgConfigServidorMouseLeave(Sender: TObject);
-begin
-  MudaCursorImagem(Sender);
-end;
-
-procedure TFPrincipal.imgStartPauseClick(Sender: TObject);
-begin
-  if ServerContainer.DSServer.Started then
-    PararAplicacao
-  else
-    Inicializar;
 end;
 
 procedure TFPrincipal.imgStartPauseMouseEnter(Sender: TObject);
@@ -210,21 +178,20 @@ end;
 
 procedure TFPrincipal.MudaCursorImagem(Sender : TObject);
 begin
-  if Sender is TJvImage then
+  if Sender is TControl then
   begin
-    if TJvImage(Sender).Tag = 0 then  //Mouse Enter
+    if TControl(Sender).Tag = 0 then  //Mouse Enter
     begin
-       TJvImage(Sender).Cursor := crHandPoint;
-       TJvImage(Sender).Tag := 1;
+       TControl(Sender).Cursor := crHandPoint;
+       TControl(Sender).Tag := 1;
     end
     else  //TAG VAIR SER 1 VOLTANDO O CURSOR PARA DAFAULT
     begin
-      TJvImage(Sender).Tag := 0;
-      TJvImage(Sender).Cursor := crDefault;
+      TControl(Sender).Tag := 0;
+      TControl(Sender).Cursor := crDefault;
     end;
 
   end;
-
 end;
 
 procedure TFPrincipal.imgConexoesClick(Sender: TObject);
@@ -232,27 +199,13 @@ begin
   MostrarConexoes;
 end;
 
-procedure TFPrincipal.imgConexoesMouseEnter(Sender: TObject);
+procedure TFPrincipal.imgStartPauseClick(Sender: TObject);
 begin
-  MudaCursorImagem(Sender);
+  if (ServerContainer.DSServer.Started) then
+    PararAplicacao
+  else
+    Inicializar;
 end;
-
-procedure TFPrincipal.imgConexoesMouseLeave(Sender: TObject);
-begin
-  MudaCursorImagem(Sender);
-end;
-
-procedure TFPrincipal.imgConfigDatabaseMouseEnter(Sender: TObject);
-begin
-  MudaCursorImagem(Sender);
-end;
-
-procedure TFPrincipal.imgConfigDatabaseMouseLeave(Sender: TObject);
-begin
-  MudaCursorImagem(Sender);
-end;
-
-{$ENDREGION}
 
 procedure TFPrincipal.imgConfigDatabaseClick(Sender: TObject);
 var
@@ -260,11 +213,30 @@ var
 begin
   try
     FConfigDataBase := TFConfDatabase.Create(nil);
-    PararAplicacao;
     FConfigDataBase.ShowModal;
+
+    if not FConfirmaDBConf then
+    Exit;
+
+    FTesteConexao := EmptyStr;
+    PararAplicacao;
     Inicializar;
   finally
     FConfigDataBase.Free;
+  end;
+end;
+
+procedure TFPrincipal.imgConfigServidorClick(Sender: TObject);
+var
+  FConfServer : TFConfigServidor;
+begin
+  FConfServer := TFConfigServidor.Create(nil);
+  try
+    FConfServer.ShowModal;
+    PararAplicacao;
+    IniciarAplicacao;
+  finally
+    FConfServer.Free;
   end;
 end;
 
@@ -273,15 +245,7 @@ begin
   imgStartPause.Picture.Bitmap := imgList.Items[1].Bitmap;
   imgStartPause.Hint           := 'INICIAR APLICAÇÃO';
   ServerContainer.DSServer.Stop;
-
-  lblMensagem.Font.Name  := 'Segoe UI';
-  lblMensagem.Font.Color := StringToColor('$2222B2');
-  lblMensagem.Font.Size  := 10;
-  lblMensagem.WordWrap   := True;
-  lblMensagem.Alignment  := taLeftJustify;
-  lblMensagem.Align      := alClient;
-  lblMensagem.Caption    := FTesteConexao;
-  lblStatus.Caption      := 'Servidor Desconectado';
+  ExibirMensagensStatus;
 
   HintTrayIcon := lblStatus.Caption;
   TrayIcon.Hint  := HintTrayIcon;
@@ -289,37 +253,25 @@ end;
 
 procedure TFPrincipal.Inicializar;
 begin
-  MsgRetornoInicializacao := '';
-  MsgRetornoInicializacao := Inicializacao;
+  FTesteConexao := EmptyStr;
+  FTesteConexao := SMConexao.TestaConexao;
 
-  if (Trim(MsgRetornoInicializacao) = Conexao_Realizada) then
-  begin
-    imgStartPause.Picture.Bitmap := imgList.Items[0].Bitmap;
-    imgStartPause.Hint           := 'PAUSAR APLICAÇÃO';
-    ServerContainer.DSServer.Start;
-  end
+  if (Trim(FTesteConexao).Equals(EmptyStr)) then
+    IniciarAplicacao
   else
     PararAplicacao;
-    
+
+  ExibirMensagensStatus;
 end;
 
 procedure TFPrincipal.IniciarAplicacao;
 begin
   imgStartPause.Picture.Bitmap := imgList.Items[0].Bitmap;
-  imgStartPause.Hint           := 'PAUSAR APLICAÇÃO';
+  imgStartPause.Hint           := 'PAUSAR APLICA��O';
 
   try
-
     ServerContainer.DSServer.Start;
-
-    lblStatus.Font.Name  := 'Segoe UI';
-    lblStatus.Font.Color := StringToColor('$800000');
-    lblStatus.Font.Size  := 12;
-    lblStatus.WordWrap   := False;
-    lblStatus.Alignment  := taLeftJustify;
-    lblStatus.Caption    := 'Servidor Conectado!' + #13 + 'Porta: ' + ServerContainer.DSTCPServerTransport.Port.ToString;
-    HintTrayIcon := lblStatus.Caption;
-    TrayIcon.Hint  := HintTrayIcon;
+    ExibirMensagensStatus;
   except
     on E:Exception do
     begin
@@ -338,26 +290,10 @@ procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
   SMConexao            := TSMConexao.Create(Self);
   ServerContainer      := TServerContainer.Create(Self);
-  //AplicacaoIniciada    := True;
   Inicializar;
   Application.ShowHint := True;
-  //AplicacaoIniciada    := False;
   GConexoes            := False;
   EsconderAplicacao;
-end;
-
-procedure TFPrincipal.imgConfigServidorClick(Sender: TObject);
-var
-  FConfServer : TFConfigServidor;
-begin
-  FConfServer := TFConfigServidor.Create(nil);
-  try
-    PararAplicacao;
-    FConfServer.ShowModal;
-    Inicializar;
-  finally
-    FConfServer.Free;
-  end;
 end;
 
 procedure TFPrincipal.TrayIconDblClick(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -389,31 +325,15 @@ begin
 end;
 
 procedure TFPrincipal.Travar_Destravar_Imagens;
-var
-  I : Integer;
 begin
   if GConexoes then
   begin
-    {
-    for I := 0 to FPrincipal.ComponentCount do
-      if FPrincipal.Components[I] is TJvImage then
-        if not (FPrincipal.Components[I].Name = 'imgConexoes') then
-          TJvImage(FPrincipal.Components[I]).Enabled := False;
-     }//CODIGO ACIMA DÁ OUT OF ARGUMENT --- ANALISANDO
-
     imgStartPause.Enabled     := False;
     imgConfigDatabase.Enabled := False;
     imgConfigServidor.Enabled := False;
   end
   else
   begin
-    {
-    for I:= 0 to FPrincipal.ComponentCount do
-      if FPrincipal.Components[I] is TJvImage then
-        if not (FPrincipal.Components[I].Name = 'imgConexoes') then
-          TJvImage(I).Enabled := True;
-    } //CODIGO ACIMA DÁ OUT OF ARGUMENT --- ANALISANDO
-
     imgStartPause.Enabled     := True;
     imgConfigDatabase.Enabled := True;
     imgConfigServidor.Enabled := True;
