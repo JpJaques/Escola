@@ -58,6 +58,7 @@ object FConfDatabase: TFConfDatabase
       Height = 13
       Align = alBottom
       Transparent = True
+      ExplicitWidth = 5
     end
     object edtHostname: TJvEdit
       Left = 6
