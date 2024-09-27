@@ -1,0 +1,7 @@
+
+SET SQL DIALECT 3; 
+
+/* CREATE DATABASE 'C:\Users\JoaoPaulo\Desktop\Projetos\Escola\Escola\Servidor\Exec\..\DATABASE\DATABASE.FDB' PAGE_SIZE 8192 DEFAULT CHARACTER SET ISO8859_1; */
+
+
+COMMIT WORK;

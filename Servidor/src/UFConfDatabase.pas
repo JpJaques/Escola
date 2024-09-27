@@ -144,21 +144,24 @@ procedure TFConfDatabase.FormCreate(Sender: TObject);
 begin
 // Seta a Classe de Config do Ini
   FIni := TIniConfigDatabase.Create;
-end;
 
-procedure TFConfDatabase.FormShow(Sender: TObject);
-begin
   edtPorta.Text    := FIni.GetPorta;
   edtSenha.Text    := FIni.GetPassword;
   edtHostname.Text := FIni.GetHostname;
   edtUsuario.Text  := FIni.GetUserName;
   edtCaminho.Text  := FIni.GetDatabase;
+
+end;
+
+procedure TFConfDatabase.FormShow(Sender: TObject);
+begin
+ //
 end;
 
 procedure TFConfDatabase.pnlFundoMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  Screen.Cursor := crSizeAll;
+  Screen.Cursor := crDefault;
   ReleaseCapture;
   Self.Perform(wm_nclbuttondown,HTCAPTION,0);
   Screen.Cursor := crDefault;

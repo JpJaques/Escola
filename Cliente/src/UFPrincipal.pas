@@ -14,7 +14,12 @@ Vcl.Forms,
 Vcl.Dialogs,
 UDMConexao,
 UInicializacao,
-UFConfigCliente, Vcl.Menus, Vcl.Imaging.jpeg, Vcl.ExtCtrls, UCadUsuario;
+UFConfigCliente,
+Vcl.Menus,
+Vcl.Imaging.jpeg,
+Vcl.ExtCtrls,
+UCadUsuario,
+System.UITypes;
 
 type
   TFPrincipal = class(TForm)

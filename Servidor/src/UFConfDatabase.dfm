@@ -152,6 +152,7 @@ object FConfDatabase: TFConfDatabase
       Height = 25
       Caption = 'Criar Database'
       TabOrder = 6
+      Visible = False
       OnClick = Button1Click
     end
   end

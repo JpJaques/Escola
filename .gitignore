@@ -19,3 +19,8 @@ Cliente/Cliente.exe
 Cliente/Cliente.exe
 Servidor/Servidor.dproj
 Escola.groupproj
+/Escola-master
+*.groupproj
+*.dproj
+*.res
+*.FDB
