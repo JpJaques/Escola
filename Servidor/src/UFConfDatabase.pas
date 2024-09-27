@@ -153,10 +153,6 @@ begin
 
 end;
 
-procedure TFConfDatabase.FormShow(Sender: TObject);
-begin
- //
-end;
 
 procedure TFConfDatabase.pnlFundoMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
