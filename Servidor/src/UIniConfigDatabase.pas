@@ -4,7 +4,8 @@ interface
 uses
 System.IniFiles,
 System.Classes,
-System.SysUtils;
+System.SysUtils,
+UIni;
 
 type
   TIniConfigDatabase = class
@@ -20,8 +21,7 @@ type
         PORTA      = 'Porta';
 
       var
-        FIni : TIniFile;
-        procedure CriaIniPadrao(APathFile : String);
+        FIni : TIni;
     public
       constructor Create;
       destructor Destroy; override;
@@ -45,29 +45,9 @@ constructor TIniConfigDatabase.Create;
 var
   LIniFile, LDir: string;
 begin
-  LDir := ExtractFilePath(ParamStr(0)) + 'CONF';
-
-  if Not DirectoryExists(LDir) then
-    ForceDirectories(LDir);
-
-  LIniFile := LDir + '\Configuracao.ini';
-
-  if not FileExists(LIniFile) then
-    CriaIniPadrao(LIniFile)
-  else
-    FIni := TIniFile.Create(LIniFile);
+  FIni := TIni.Create(SECTION);
 end;
 
-procedure TIniConfigDatabase.CriaIniPadrao(APathFile : String);
-begin
-  FIni := TIniFile.Create(APathFile);
-
-  FIni.WriteString(SECTION,USERNAME,'SYSDBA');
-  FIni.WriteString(SECTION,PASSWORD,'masterkey');
-  FIni.WriteString(SECTION,DATABASE,'Database.FDB');
-  FIni.WriteString(SECTION,HOSTNAME,'127.0.0.1');
-  FIni.WriteString(SECTION,PORTA,'3055');
-end;
 
 destructor TIniConfigDatabase.Destroy;
 begin
@@ -77,52 +57,52 @@ end;
 
 function TIniConfigDatabase.GetDatabase: string;
 begin
-  Result := FIni.ReadString(SECTION,DATABASE,'');
+  Result := FIni.LerString(DATABASE, 'DATABASE.FDB');
 end;
 
 function TIniConfigDatabase.GetHostname: string;
 begin
-  Result := FIni.ReadString(SECTION,HOSTNAME,'');
+  Result := FIni.LerString(HOSTNAME,'LOCALHOST');
 end;
 
 function TIniConfigDatabase.GetPassword: string;
 begin
-  Result := FIni.ReadString(SECTION,PASSWORD,'');
+  Result := FIni.LerString(PASSWORD,'123456');
 end;
 
 function TIniConfigDatabase.GetPorta: string;
 begin
-  Result := FIni.ReadString(SECTION,PORTA,'');
+  Result := FIni.LerString(PORTA,'3055');
 end;
 
 function TIniConfigDatabase.GetUserName: string;
 begin
-  Result := FIni.ReadString(SECTION,USERNAME,'');
+  Result := FIni.LerString(USERNAME,'SYSDBA');
 end;
 
 procedure TIniConfigDatabase.SetDatabase(AValue: String);
 begin
-  FIni.WriteString(SECTION,DATABASE,AValue);
+  FIni.Escrever(DATABASE,AValue);
 end;
 
 procedure TIniConfigDatabase.SetHostname(AValue: String);
 begin
-  FIni.WriteString(SECTION,HOSTNAME,AValue);
+  FIni.Escrever(HOSTNAME,AValue);
 end;
 
 procedure TIniConfigDatabase.SetPassword(AValue: String);
 begin
-  FIni.WriteString(SECTION,PASSWORD,AValue);
+  FIni.Escrever(PASSWORD,AValue);
 end;
 
 procedure TIniConfigDatabase.SetPorta(AValue: String);
 begin
-  FIni.WriteString(SECTION,PORTA,AValue);
+  FIni.Escrever(PORTA,AValue);
 end;
 
 procedure TIniConfigDatabase.SetUserName(AValue: String);
 begin
-  FIni.WriteString(SECTION,USERNAME,AValue);
+  FIni.Escrever(USERNAME,AValue);
 end;
 
 end.

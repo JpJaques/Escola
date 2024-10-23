@@ -168,8 +168,9 @@ begin
 
   if not FileExists(RetornaPathDB + DB + '.FDB') then
   begin
-    ShowMessage('O Arquivo de Banco de Dados "DATABASE.FDB" Não Existe no Diretório Padrão Atual.' +
-                #13 + 'O Processo Será Abortado!');
+    ShowMessage('O Arquivo de Banco de Dados "DATABASE.FDB" Não Existe no Diretório Padrão Atual.' + #13 +
+                'Diretório  ' + RetornaPathDB + DB + '.FDB' +#13 +
+                'O Processo Será Abortado!');
     Abort;
   end;
 
@@ -188,7 +189,7 @@ end;
 
 class function TMetadataDatabase.RetornaPathDB: string;
 begin
-  Result := ExtractFilePath(ParamStr(0)) + '..\DATABASE\';
+  Result := ExtractFilePath(ParamStr(0)) + 'Database\';
 end;
 
 end.

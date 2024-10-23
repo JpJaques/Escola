@@ -21,7 +21,8 @@ JvSpeedButton,
 Vcl.StdCtrls,
 JvExStdCtrls,
 JvEdit,
-System.IniFiles;
+UIniConfigServer;
+
 
 type
   TFConfigServidor = class(TForm)
@@ -33,12 +34,17 @@ type
     Label1: TLabel;
     Label2: TLabel;
     edtHostname: TJvEdit;
+    Panel1: TPanel;
     edtPorta: TJvEdit;
     procedure btnCancelarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
-    procedure pnlInfoMouseDown(Sender: TObject; Button: TMouseButton;
+    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Panel1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
+    FIni : TIniConfigServer;
   public
     iniAlterado : Boolean;
 
@@ -57,43 +63,40 @@ begin
 end;
 
 procedure TFConfigServidor.btnConfirmarClick(Sender: TObject);
-var
-  iniConfig:             TIniFile;
-  DiretorioConfiguracao: string;
-  ArquivoIni:            string;
 begin
-  DiretorioConfiguracao := ExtractFilePath(Application.ExeName) + 'CONF\';
+ if not FIni.GetHostName.Equals(edtHostname.Text) then
+  FIni.SetHostname(edtHostname.Text);
 
-  if not DirectoryExists(DiretorioConfiguracao) then
-    ForceDirectories(DiretorioConfiguracao);
-
-  ArquivoIni := ChangeFileExt(ExtractFilePath(Application.ExeName)+'CONF\Configuracao','.ini');
-  iniConfig  := TIniFile.Create(ArquivoIni);
-  try
-    if not iniConfig.SectionExists('SERVER') then
-    begin
-      iniConfig.WriteString('SERVER','HOSTNAME',edtHostname.Text);
-      iniConfig.WriteString('SERVER','PORTA',edtPorta.Text);
-    end
-    else
-    begin
-      if (Trim(edtPorta.Text) <> Trim(iniConfig.ReadString('SERVER','PORTA',''))) then
-        iniConfig.WriteString('SERVER','PORTA',edtPorta.Text);
-    end;
-  finally
-    iniConfig.Free;
-  end;
+ if not FIni.GetPorta.ToString.Equals(edtPorta.Text) then
+  FIni.SetPorta(edtPorta.Text);
 
   Self.Close;
 end;
 
-procedure TFConfigServidor.pnlInfoMouseDown(Sender: TObject;
+procedure TFConfigServidor.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FIni.Free;
+end;
+
+procedure TFConfigServidor.FormCreate(Sender: TObject);
+begin
+  FIni := TIniConfigServer.Create;
+end;
+
+procedure TFConfigServidor.FormShow(Sender: TObject);
+begin
+  edtHostname.Text := FIni.GetHostname;
+  edtPorta.Text    := FIni.GetPorta.ToString;
+end;
+
+procedure TFConfigServidor.Panel1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  Screen.Cursor := crSizeAll;
+  Screen.Cursor := crDefault;
   ReleaseCapture;
   Self.Perform(wm_nclbuttondown,HTCAPTION,0);
   Screen.Cursor := crDefault;
+
 end;
 
 end.
