@@ -48,8 +48,7 @@ type
     procedure edtCaminhoDblClick(Sender: TObject);
     procedure edtCaminhoMouseEnter(Sender: TObject);
     procedure edtCaminhoMouseLeave(Sender: TObject);
-    procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnMetadataClick(Sender: TObject);
     procedure btnCriaDatabaseClick(Sender: TObject);
