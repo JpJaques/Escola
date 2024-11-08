@@ -14,7 +14,7 @@ type
     class function SqlCadastro: String; override;
     class function SqlConsulta: string; override;
     class function SqlRelatorio: string; override;
-
+    Class function Generator: String; override;
     class procedure ConfigurarPropriedadesDosCampos(Fields: TFields); override;
     class function Descricao: string; override;
 
@@ -54,6 +54,11 @@ end;
 class function TClassUsuario.Descricao: string;
 begin
   Result := 'Usuário';
+end;
+
+class function TClassUsuario.Generator: String;
+begin
+ Result:= 'GEN_USUARIO_ID';
 end;
 
 class function TClassUsuario.SqlCadastro: String;

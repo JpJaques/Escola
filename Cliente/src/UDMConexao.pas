@@ -10,6 +10,7 @@ type
   TDMConexao = class(TDataModule)
     SQLConnection: TSQLConnection;
     procedure DataModuleCreate(Sender: TObject);
+
   private
     FInstanceOwner: Boolean;
     FServerMethodsClient: TServerMethodsClient;
@@ -22,6 +23,7 @@ type
     property ServerMethodsClient: TServerMethodsClient read GetServerMethodsClient write FServerMethodsClient;
     function ExecuteMethods(Const Metodo: String; Const Parametros: array of Olevariant):Olevariant;
     function ExecuteReader(Sql:String):Olevariant;
+    function GerarCodigo(NomeGenerator: string): integer;
 
   end;
 
@@ -177,7 +179,14 @@ end;
 
 function TDMConexao.ExecuteReader(Sql: String): Olevariant;
 begin
-  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteReader', [Sql])
+  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteReader', [Sql]);
+end;
+
+
+
+function TDMConexao.GerarCodigo(NomeGenerator: string): integer;
+begin
+ Result:= DMConexao.ExecuteMethods('TSMConexao.GerarCodigo',[NomeGenerator]);
 end;
 
 function TDMConexao.GetServerMethodsClient: TServerMethodsClient;

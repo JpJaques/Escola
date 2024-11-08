@@ -11,10 +11,11 @@ type
     DSProviderConnection: TDSProviderConnection;
     procedure DataModuleCreate(Sender: TObject);
     procedure CDSCadastroBeforeOpen(DataSet: TDataSet);
+    procedure CDSCadastroNewRecord(DataSet: TDataSet);
   private
     FCodigoAtual: Integer;
   public
-    FClassFilha: TClassPaiCadastro;
+    FClassFilha: fClassPaiCadastro;
     //property CodigoAtual: Integer read FCodigoAtual write FCodigoAtual;//VERIFICAR O MOTIVO COM JOAO
     procedure AbrirRegistro(codigo:Integer);
     procedure ProximoCodigo;
@@ -64,14 +65,18 @@ begin
   end;
 end;
 
+procedure TDMPaiCadastro.CDSCadastroNewRecord(DataSet: TDataSet);
+begin
+ CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Generator);
+ //CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:= DMConexao.ExecuteScalar('SELECT GEN_ID ('+ FclassFilha.Generator +',1) FROM RDB$DATABASE');
+ FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger;
+end;
+
+
 procedure TDMPaiCadastro.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection.SQLConnection := DmConexao.SQLConnection;
-  CDSCadastro.ProviderName           := 'DSPCadastro';
-  CDSCadastro.RemoteServer           := DSProviderConnection;
 
-  CDSCadastro.FetchParams;
-  CDSCadastro.Open;
 end;
 
 procedure TDMPaiCadastro.Primeiro;

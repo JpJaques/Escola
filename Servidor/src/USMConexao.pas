@@ -38,7 +38,7 @@ type
     procedure CriaCDSMonitorarConexoes;
     procedure RegistraConexao(Conexao : TDSTCPConnectEventObject);
     procedure RemoveConexao;
-    function GerarCodigo(NomeGenerator: string): integer;
+    function  GerarCodigo(NomeGenerator: string): integer;
     function  TestaConexao:string; overload;
     function  TestaConexao(const AUser, ASenha, ADatabase: String):string; overload;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
@@ -179,8 +179,10 @@ end;
 
 function TSMConexao.GerarCodigo(NomeGenerator: string): integer;
 begin
+ // ta certo aqui não tira caramba, chama la no UDM conexao
  Result := ExecuteScalar('SELECT GEN_ID ('+ NomeGenerator +',1) FROM RDB$DATABASE');
 end;
+
 
 function TSMConexao.GetConection: TSQLConnection;
 var

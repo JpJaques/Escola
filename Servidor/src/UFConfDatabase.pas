@@ -50,7 +50,6 @@ type
     procedure edtCaminhoMouseLeave(Sender: TObject);
     procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnMetadataClick(Sender: TObject);
     procedure btnCriaDatabaseClick(Sender: TObject);

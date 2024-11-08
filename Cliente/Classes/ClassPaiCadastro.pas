@@ -3,10 +3,10 @@ unit ClassPaiCadastro;
 interface
 
 uses
-  Data.SqlExpr, Data.DB;
+  Data.SqlExpr, Data.DB,Classes;
 
 type
-  TClassPaiCadastro = class
+  TClassPaiCadastro = class(TPersistent)
   public
     class function CampoCodigo: String; virtual;
     class function Tabela: String; virtual;
@@ -14,15 +14,24 @@ type
     class function SqlCadastro: String; virtual;
     class function SqlConsulta: String; virtual;
     class function SqlRelatorio: String; virtual;
+    Class function CampoChave: String; virtual;
+    Class function Generator: String; Virtual;
     class procedure ConfigurarPropriedadesDosCampos(Fields: TFields); virtual;
     class procedure CriarParametro(SQLDataSet: TSQLDataSet); virtual;
   end;
+
+  fClassPaiCadastro = class of TClassPaiCadastro;
 
 implementation
 
 { TClassPaiCadastro }
 
 { TClassPaiCadastro }
+
+class function TClassPaiCadastro.CampoChave: String;
+begin
+ //
+end;
 
 class function TClassPaiCadastro.CampoCodigo: String;
 begin
@@ -47,6 +56,11 @@ end;
 class function TClassPaiCadastro.Descricao: String;
 begin
   //
+end;
+
+class function TClassPaiCadastro.Generator: String;
+begin
+ //
 end;
 
 class function TClassPaiCadastro.SqlCadastro: String;

@@ -113,6 +113,8 @@ begin
   //DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
   DS.DataSet.Insert;
   EditCodigo.AsInteger := 0;
+
+
 end;
 
 procedure TFPaiCadastro.PanelPaiExit(Sender: TObject);
