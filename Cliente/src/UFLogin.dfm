@@ -13,7 +13,7 @@ object frmLogin: TfrmLogin
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poOwnerFormCenter
+  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
   object PnlPrincipal: TPanel
@@ -23,10 +23,6 @@ object frmLogin: TfrmLogin
     Height = 128
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 168
-    ExplicitTop = 72
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object gbxPrincipal: TGroupBox
       AlignWithMargins = True
       Left = 4
@@ -35,10 +31,6 @@ object frmLogin: TfrmLogin
       Height = 120
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 8
-      ExplicitTop = 0
-      ExplicitWidth = 255
-      ExplicitHeight = 144
       object Image1: TImage
         Left = 11
         Top = 9

@@ -80,9 +80,6 @@ type
     procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure imgConfigServidorClick(Sender: TObject);
   private
-
-    SMConexao         : TSMConexao;
-    ServerContainer   : TServerContainer;
     HintTrayIcon      : string;
     FTesteConexao     : string;
     GConexoes         : Boolean;
@@ -97,7 +94,7 @@ type
     procedure ExibirMensagensStatus;
 
   public
-    property Conexao : TSMConexao read SMConexao;
+   // property Conexao : TSMConexao read SMConexao;
     property ConfirmaDBConf: Boolean read FConfirmaDBConf write FConfirmaDBConf;
   end;
 
@@ -254,7 +251,7 @@ end;
 procedure TFPrincipal.Inicializar;
 begin
   FTesteConexao := EmptyStr;
-  FTesteConexao := SMConexao.TestaConexao;
+  FTesteConexao := SMConexao.TestaConexao_1;
 
   if (Trim(FTesteConexao).Equals(EmptyStr)) then
     IniciarAplicacao
@@ -271,6 +268,7 @@ begin
 
   try
     ServerContainer.DSServer.Start;
+
     ExibirMensagensStatus;
   except
     on E:Exception do

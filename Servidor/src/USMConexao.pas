@@ -27,20 +27,19 @@ type
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DSServerModuleDestroy(Sender: TObject);
 
-
   private
     FControleConexao : TDictionary<Integer,TSQLConnection>;
     function GetConection : TSQLConnection;
 
   public
-    CDSConexao : TClientDataSet;
+    CDSConexao: TClientDataSet;
     property Conexao: TSQLConnection read GetConection;
     procedure CriaCDSMonitorarConexoes;
     procedure RegistraConexao(Conexao : TDSTCPConnectEventObject);
     procedure RemoveConexao;
     function  GerarCodigo(NomeGenerator: string): integer;
-    function  TestaConexao:string; overload;
-    function  TestaConexao(const AUser, ASenha, ADatabase: String):string; overload;
+    function  TestaConexao_1:string;
+    function  TestaConexao(const AUser, ASenha, ADatabase: String):string;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
     procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
     function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
@@ -287,7 +286,7 @@ begin
 
 end;
 
-function TSMConexao.TestaConexao: string;
+function TSMConexao.TestaConexao_1: string;
 var
   Con : TSQLConnection;
   DBParamConfig : TConfigDatabase;

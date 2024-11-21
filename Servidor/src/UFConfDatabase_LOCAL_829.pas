@@ -48,7 +48,8 @@ type
     procedure edtCaminhoDblClick(Sender: TObject);
     procedure edtCaminhoMouseEnter(Sender: TObject);
     procedure edtCaminhoMouseLeave(Sender: TObject);
-    procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
+    procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnMetadataClick(Sender: TObject);
     procedure btnCriaDatabaseClick(Sender: TObject);
@@ -64,7 +65,7 @@ type
 implementation
 uses
   UFPrincipal,
-  UMetadataDatabase, USMConexao;
+  UMetadataDatabase;
 
 {$R *.dfm}
 
@@ -170,7 +171,7 @@ begin
   else
     LDatabase := edtCaminho.Text;
 
-  Result := SMConexao.TestaConexao(edtUsuario.Text,
+  Result := FPrincipal.Conexao.TestaConexao(edtUsuario.Text,
                                   edtSenha.Text,
                                   LDatabase);
 end;

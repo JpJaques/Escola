@@ -28,16 +28,16 @@ implementation
 
 procedure TSMPaiCadastro.DSServerCreate_Filho(Sender: TObject);
 begin
-  SQLDSCadastro.SQLConnection :=  SMConexao.Conexao;
+
   SQLDSCadastro.Close;
   SQLDSCadastro.CommandText := FClassefilha.SqlCadastro;
   FClassefilha.CriarParametro(SQLDSCadastro);
-  SQLDSCadastro.Params.CreateParam(ftInteger,'COD',ptInput);
   SQLDSCadastro.Open;
 end;
 
 procedure TSMPaiCadastro.DSServerModuleCreate(Sender: TObject);
 begin
+  SQLDSCadastro.SQLConnection :=  SMConexao.Conexao;
   DSServerCreate_Filho(Sender);
 end;
 

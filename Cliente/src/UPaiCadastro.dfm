@@ -41,6 +41,7 @@ object FPaiCadastro: TFPaiCadastro
       TabOrder = 0
       DecimalPlacesAlwaysShown = False
       OnButtonClick = EditCodigoButtonClick
+      OnExit = EditCodigoExit
       OnKeyPress = EditCodigoKeyPress
     end
     object Anterior: TButton

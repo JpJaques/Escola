@@ -36,7 +36,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UServerMethods, Vcl.Forms, UFPrincipal;
+  UServerMethods, Vcl.Forms, USMConexao;
 
 procedure TServerContainer.DataModuleCreate(Sender: TObject);
 begin
@@ -48,13 +48,13 @@ procedure TServerContainer.DSTCPServerTransportConnect(
   Event: TDSTCPConnectEventObject);
 begin
 
-  FPrincipal.Conexao.RegistraConexao(Event);
+  SMConexao.RegistraConexao(Event);
 end;
 
 procedure TServerContainer.DSTCPServerTransportDisconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
-  FPrincipal.Conexao.RemoveConexao;
+  SMConexao.RemoveConexao;
 end;
 
 end.

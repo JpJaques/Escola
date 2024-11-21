@@ -64,7 +64,7 @@ type
 implementation
 uses
   UFPrincipal,
-  UMetadataDatabase, USMConexao;
+  UMetadataDatabase;
 
 {$R *.dfm}
 
@@ -170,7 +170,7 @@ begin
   else
     LDatabase := edtCaminho.Text;
 
-  Result := SMConexao.TestaConexao(edtUsuario.Text,
+  Result := FPrincipal.Conexao.TestaConexao(edtUsuario.Text,
                                   edtSenha.Text,
                                   LDatabase);
 end;
