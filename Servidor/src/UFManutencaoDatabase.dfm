@@ -290,7 +290,6 @@ object FManutencaoDatabase: TFManutencaoDatabase
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitTop = 233
         ExplicitWidth = 33
         ExplicitHeight = 16
       end
@@ -472,5 +471,10 @@ object FManutencaoDatabase: TFManutencaoDatabase
     OnLogNextLine = ExtractOrigemLogNextLine
     Left = 728
     Top = 320
+  end
+  object FDGUIxWaitCursor: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 1040
+    Top = 200
   end
 end
