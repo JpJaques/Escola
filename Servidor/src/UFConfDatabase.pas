@@ -51,7 +51,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnManutencaoClick(Sender: TObject);
   private
-    FIni:      TIniConfigDatabase;
+    FIni: TIniConfigDatabase;
   public
     Function TestaConexao:String;
 
