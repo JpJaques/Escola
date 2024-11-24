@@ -7,7 +7,6 @@ object DMPaiCadastro: TDMPaiCadastro
     Aggregates = <>
     Params = <>
     BeforeOpen = CDSCadastroBeforeOpen
-    OnNewRecord = CDSCadastroNewRecord
     Left = 55
     Top = 175
   end

@@ -40,7 +40,6 @@ type
     procedure EditCodigoKeyPress(Sender: TObject; var Key: Char);
     procedure EditCodigoButtonClick(Sender: TObject);
     procedure PanelPaiExit(Sender: TObject);
-    procedure EditCodigoExit(Sender: TObject);
      // procedure Sempremaiuscula()
   private
 
@@ -78,13 +77,7 @@ end;
 
 procedure TFPaiCadastro.EditCodigoButtonClick(Sender: TObject);
 begin
-  abort;
-end;
-
-procedure TFPaiCadastro.EditCodigoExit(Sender: TObject);
-begin
- if EditCodigo.Text<> '' then
- DMCadastro.AbrirRegistro(strtoint(EditCodigo.Text));
+    //
 end;
 
 procedure TFPaiCadastro.EditCodigoKeyPress(Sender: TObject; var Key: Char);
@@ -105,8 +98,8 @@ end;
 
 procedure TFPaiCadastro.FormCreate(Sender: TObject);
 begin
-  DS.DataSet:= DMCadastro.CDSCadastro;
-  DMCadastro.AbrirRegistro(1);
+
+  DS.DataSet := DMCadastro.CDSCadastro;
 end;
 
 procedure TFPaiCadastro.GravarClick(Sender: TObject);
@@ -117,24 +110,21 @@ end;
 
 procedure TFPaiCadastro.IncluirClick(Sender: TObject);
 begin
-  DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
+  //DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
   DS.DataSet.Insert;
   EditCodigo.AsInteger := 0;
-
-
 end;
 
 procedure TFPaiCadastro.PanelPaiExit(Sender: TObject);
 begin
   if EditCodigo.AsInteger > 0 then
-  DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
+  //DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
 
 end;
 
-
 procedure TFPaiCadastro.PrimeiroClick(Sender: TObject);
 begin
-  DMCadastro.Primeiro;
+  //DMCadastro.Primeiro;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
 end;
 
@@ -146,7 +136,7 @@ end;
 
 procedure TFPaiCadastro.AnteriorClick(Sender: TObject);
 begin
-  DMCadastro.Anterior;
+  //DMCadastro.Anterior;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
 end;
 
