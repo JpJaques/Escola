@@ -22,9 +22,9 @@ uses
   USMCadUsuario in 'src\USMCadUsuario.pas' {SMCadUsuario: TDSServerModule},
   UConfigDatabase in 'src\UConfigDatabase.pas',
   UIniConfigDatabase in 'src\UIniConfigDatabase.pas',
-  UMetadataDatabase in 'src\UMetadataDatabase.pas',
   UINI in 'src\UINI.Pas',
-  UIniConfigServer in 'src\UIniConfigServer.pas';
+  UIniConfigServer in 'src\UIniConfigServer.pas',
+  UFManutencaoDatabase in 'src\UFManutencaoDatabase.pas' {FManutencaoDatabase};
 
 {$R *.res}
 

@@ -40,14 +40,14 @@ type
     procedure RemoveConexao;
     function GerarCodigo(NomeGenerator: string): integer;
     function  TestaConexao:string; overload;
-    function  TestaConexao(const AUser, ASenha, ADatabase: String):string; overload;
+    function  TestaConexao_1(const AUser, ASenha, ADatabase: String):string; overload;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
     procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
     function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
   end;
 
-var
-  SMConexao: TSMConexao;
+  var
+  SMConexao : TSMConexao;
 
 implementation
   uses
@@ -250,7 +250,7 @@ begin
 
 end;
 
-function TSMConexao.TestaConexao(const AUser, ASenha,ADatabase: String): string;
+function TSMConexao.TestaConexao_1(const AUser, ASenha,ADatabase: String): string;
   var
   Con : TSQLConnection;
   DBParamConfig : TConfigDatabase;

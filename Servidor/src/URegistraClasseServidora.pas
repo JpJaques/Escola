@@ -14,7 +14,8 @@ procedure RegistraClasseServidora(ADono: TComponent; AServer: TDSServer);
 implementation
 
 uses
-  USMCadUsuario;
+  USMCadUsuario,
+  USMConexao;
 
 
 
@@ -23,6 +24,8 @@ begin
   Assert(AServer.Started = false, 'Não é possível Adicionar Classe com Servidor Ativo!');
   TClassExpositoraClasseEX.Registrar(ADono, AServer, {Classe a Ser Exposta Ex: TSMCadBanco}TServerMethods,True,  TDSLifeCycle.Session);
   TClassExpositoraClasseEX.Registrar(ADono, AServer, TSMCadUsuario,True,  TDSLifeCycle.Session);
+  TClassExpositoraClasseEX.Registrar(ADono, AServer, TSMConexao,True,  TDSLifeCycle.Session);
+
   //TClassExpositoraClasseEX.Registrar(ADono, AServer,ClassUsuario ,True,  TDSLifeCycle.Session);
 end;
 
