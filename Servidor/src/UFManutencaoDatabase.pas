@@ -3,11 +3,40 @@ unit UFManutencaoDatabase;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Buttons, Vcl.StdCtrls,
-  dbcClasses, dbcDBComparer, Data.DBXFirebird, Data.DB, Data.SqlExpr,
-  dbcDBEngine, dbcConnection_DBX, dbcCustomScriptExtract, dbcIBScriptExtract,
-  dbcDBStructure, dbcIBDatabaseExtract;
+Winapi.Windows,
+Winapi.Messages,
+System.SysUtils,
+System.Variants,
+System.Classes,
+Vcl.Graphics,
+Vcl.Controls,
+Vcl.Forms,
+Vcl.Dialogs,
+Vcl.ExtCtrls,
+Vcl.Buttons,
+Vcl.StdCtrls,
+dbcClasses,
+dbcDBComparer,
+Data.DBXFirebird,
+Data.DB,
+Data.SqlExpr,
+dbcDBEngine,
+dbcConnection_DBX,
+dbcCustomScriptExtract,
+dbcIBScriptExtract,
+dbcDBStructure,
+dbcIBDatabaseExtract,
+Data.DBXCommon,
+FireDAC.Comp.Client,
+FireDAC.Comp.Script,
+FireDAC.Stan.Option,
+FireDAC.Phys,
+FireDAC.Phys.FBDef,
+FireDAC.Phys.FB,
+FireDAC.Comp.ScriptCommands,
+FireDAC.Stan.Util,
+FireDAC.Stan.Def, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf,
+  FireDAC.Comp.UI;
 
 type
   TFManutencaoDatabase = class(TForm)
@@ -53,6 +82,7 @@ type
     GroupBox2: TGroupBox;
     cbExecutaScriptComparacao: TCheckBox;
     cbSalvarScriptComparacao: TCheckBox;
+    FDGUIxWaitCursor: TFDGUIxWaitCursor;
     procedure btnFecharClick(Sender: TObject);
     procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
@@ -86,21 +116,15 @@ type
     procedure ValidarBancoOrigemTarget();
     function ParamsDatabase(const ADatabase: String): string;
     function PathDatabase:string;
+    function GetFDConn(Const ADatabase:String):TFDConnection;
+    function GetFDScript:TFDScript;
+
   public
     { Public declarations }
   end;
 
 implementation
 
-uses
-FireDAC.Comp.Client,
-FireDAC.Comp.Script,
-FireDAC.Stan.Option,
-FireDAC.Phys,
-FireDAC.Phys.FBDef,
-FireDAC.Phys.FB,
-FireDAC.Comp.ScriptCommands,
-FireDAC.Stan.Util;
 
 {$R *.dfm}
 
@@ -157,8 +181,7 @@ begin
 end;
 
 procedure TFManutencaoDatabase.AntesConectar(Sender: TObject);
-var
-  LDatabase: string;
+var LDatabase: string;
 begin
   LDatabase := Format('%s.FDB',[PathDatabase + 'ORIGEM']);
 
@@ -171,9 +194,9 @@ end;
 
 procedure TFManutencaoDatabase.btnCompararClick(Sender: TObject);
 var
-  LSQLDS: TSQLDataSet;
   LScriptComparacao: TStringList;
-  I: Integer;
+  LSCript: TFDScript;
+  LConn: TFDConnection;
 begin
   LimparMemos;
   ValidarBancoOrigemTarget;
@@ -182,33 +205,41 @@ begin
   DBComparer.CompareDatabases;
   DBComparer.SQLExec.GetScript(mmScript.Lines);
 
-  if cbExecutaScriptComparacao.Checked then
-  begin
-    LSQLDS.Create(Self);
+  SQLConnectionTarget.Close;
+
+  LConn   := GetFDConn(edtTarget.Text);
+  LSCript := GetFDScript;
+  LScriptComparacao := TStringList.Create;
+  try
+    LScriptComparacao.Text := mmScript.Lines.Text;
+    //Salvar Desabilitado pois da erro ao encontrar caminho ainda não sei PQ.
+    //if cbSalvarScriptComparacao.Checked then
+    //LScriptComparacao.SaveToFile(PathDatabase + 'Comparacao.SQL');
+
+    if not cbExecutaScriptComparacao.Checked then
+      Exit;
+
     try
-      LSQLDS.SQLConnection := SQLConnectionTarget;
-      LSQLDS.CommandText   := mmScript.Lines.Text;
-      try
-        LSQLDS.ExecSQL;
-      except
-        on E: Exception do
-          raise Exception.Create('Erro ao Executar Script de Comparação: ' + #13 + E.Message);
+      LSCript.Connection := LConn;
+      LSCript.SQLScripts.Add.SQL := LScriptComparacao;
+      LSCript.ScriptOptions.IgnoreError := True;
+      LSCript.ValidateAll;
+      LConn.StartTransaction;
+      LSCript.ExecuteAll;
+      LConn.Commit;
+    except
+      on E: Exception do
+      begin
+        LConn.Rollback;
+        raise Exception.Create('Error ao Executar Script: ' + #13 + E.Message);
+
       end;
-
-    finally
-      FreeAndNil(LSQLDS);
     end;
-  end;
 
-  if cbSalvarScriptComparacao.Checked then
-  begin
-    LScriptComparacao := TStringList.Create;
-    try
-      LScriptComparacao.Text := mmScript.Lines.Text;
-      LScriptComparacao.SaveToFile(PathDatabase + 'ScriptComparacao' + DateTimeToStr(Now) + '.SQL');
-    finally
-      LScriptComparacao.Free;
-    end;
+  finally
+    LSCript.Free;
+    LConn.Free;
+    LScriptComparacao.Free;
   end;
 end;
 
@@ -333,6 +364,55 @@ begin
   mmLog.Lines.Clear;
 end;
 
+function TFManutencaoDatabase.GetFDConn(const ADatabase: String): TFDConnection;
+var
+  LConn: TFDConnection;
+  LTransacao: TFDTransaction;
+begin
+  LConn      := TFDConnection.Create(Nil);
+  LTransacao := TFDTransaction.Create(Nil);
+
+  LConn.Close;
+  LConn.LoginPrompt := False;
+  LConn.Connected   := False;
+  LConn.DriverName  := 'FB';
+  LConn.Transaction := LTransacao;
+
+  with LConn.Params do
+  begin
+    DriverID := 'FB';
+    UserName := 'SYSDBA';
+    Password := 'masterkey';
+    Database := ADatabase;
+    Add('Port=3055');
+    Add('Server=Localhost');
+    Add('CharacterSet=ISO8859_1');
+  end;
+  {
+  'User_Name=SYSDBA       ' + #13 +
+  'Password=masterkey     ' + #13 +
+  'Server=Localhost       ' + #13 +
+  'Port=3055              ' + #13 +
+  'CharacterSet=ISO8859_1 ' + #13 +
+  'DriverID=FB ';
+  }
+  try
+    LConn.Open;
+    LConn.Close;
+  Except
+    on E:Exception do
+      raise Exception.Create(E.Message);
+  end;
+  Result := LConn;
+end;
+
+function TFManutencaoDatabase.GetFDScript: TFDScript;
+var LSCript:TFDScript;
+begin
+  LSCript := TFDScript.Create(Nil);
+  Result := LSCript;
+end;
+
 procedure TFManutencaoDatabase.IBDBExtractLogNextLine(Sender: TObject;LogText: string);
 begin
   if cbMostraLogExt.Checked then
@@ -399,7 +479,7 @@ begin
   SQLConnectionOrigem.Connected := False;
   SQLConnectionOrigem.Connected := True;
 
-  SQLConnectionTarget.Connected := True;
+  SQLConnectionTarget.Connected := False;
   SQLConnectionTarget.Connected := True;
 end;
 
