@@ -15,7 +15,7 @@ type
   private
 
   public
-    FClassefilha: TClassPaiCadastro;
+    FClassefilha: fClassPaiCadastro;
     protected
       procedure DSServerCreate_Filho(Sender: TObject); Virtual;
   end;
@@ -28,14 +28,16 @@ implementation
 
 procedure TSMPaiCadastro.DSServerCreate_Filho(Sender: TObject);
 begin
-  SQLDSCadastro.SQLConnection :=  SMConexao.Conexao;
+
   SQLDSCadastro.Close;
   SQLDSCadastro.CommandText := FClassefilha.SqlCadastro;
   FClassefilha.CriarParametro(SQLDSCadastro);
+  SQLDSCadastro.Open;
 end;
 
 procedure TSMPaiCadastro.DSServerModuleCreate(Sender: TObject);
 begin
+  SQLDSCadastro.SQLConnection :=  SMConexao.Conexao;
   DSServerCreate_Filho(Sender);
 end;
 

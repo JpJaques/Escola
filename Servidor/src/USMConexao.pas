@@ -27,27 +27,26 @@ type
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DSServerModuleDestroy(Sender: TObject);
 
-
   private
     FControleConexao : TDictionary<Integer,TSQLConnection>;
     function GetConection : TSQLConnection;
 
   public
-    CDSConexao : TClientDataSet;
+    CDSConexao: TClientDataSet;
     property Conexao: TSQLConnection read GetConection;
     procedure CriaCDSMonitorarConexoes;
     procedure RegistraConexao(Conexao : TDSTCPConnectEventObject);
     procedure RemoveConexao;
-    function GerarCodigo(NomeGenerator: string): integer;
-    function  TestaConexao:string; overload;
-    function  TestaConexao_1(const AUser, ASenha, ADatabase: String):string; overload;
+    function  GerarCodigo(NomeGenerator: string): integer;
+    function  TestaConexao_1:string;
+    function  TestaConexao(const AUser, ASenha, ADatabase: String):string;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
     procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
     function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
   end;
 
-  var
-  SMConexao : TSMConexao;
+var
+  SMConexao: TSMConexao;
 
 implementation
   uses
@@ -179,8 +178,10 @@ end;
 
 function TSMConexao.GerarCodigo(NomeGenerator: string): integer;
 begin
+ // ta certo aqui não tira caramba, chama la no UDM conexao
  Result := ExecuteScalar('SELECT GEN_ID ('+ NomeGenerator +',1) FROM RDB$DATABASE');
 end;
+
 
 function TSMConexao.GetConection: TSQLConnection;
 var
@@ -250,7 +251,7 @@ begin
 
 end;
 
-function TSMConexao.TestaConexao_1(const AUser, ASenha,ADatabase: String): string;
+function TSMConexao.TestaConexao(const AUser, ASenha,ADatabase: String): string;
   var
   Con : TSQLConnection;
   DBParamConfig : TConfigDatabase;
@@ -285,7 +286,7 @@ begin
 
 end;
 
-function TSMConexao.TestaConexao: string;
+function TSMConexao.TestaConexao_1: string;
 var
   Con : TSQLConnection;
   DBParamConfig : TConfigDatabase;

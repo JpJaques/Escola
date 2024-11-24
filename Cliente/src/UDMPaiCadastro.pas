@@ -11,10 +11,11 @@ type
     DSProviderConnection: TDSProviderConnection;
     procedure DataModuleCreate(Sender: TObject);
     procedure CDSCadastroBeforeOpen(DataSet: TDataSet);
+    procedure CDSCadastroNewRecord(DataSet: TDataSet);
   private
     FCodigoAtual: Integer;
   public
-    FClassFilha: TClassPaiCadastro;
+    FClassFilha: fClassPaiCadastro;
     //property CodigoAtual: Integer read FCodigoAtual write FCodigoAtual;//VERIFICAR O MOTIVO COM JOAO
     procedure AbrirRegistro(codigo:Integer);
     procedure ProximoCodigo;
@@ -38,8 +39,6 @@ begin
  if codigo > 0 then begin
     FcodigoAtual:= Codigo;
     CDSCadastro.Close;
-
-    // SQLDS.ParamByName('COD').AsInteger:=codigo;
     CDSCadastro.FetchParams;
     CDSCadastro.Open;
   end;
@@ -54,24 +53,34 @@ procedure TDMPaiCadastro.CDSCadastroBeforeOpen(DataSet: TDataSet);
 var
   X: Integer;
 begin
- with CDSCadastro do
+ //with CDSCadastro do
   begin
-    for x := 0 to Params.Count - 1 do
+    for x := 0 to CDSCadastro.Params.Count - 1 do
     begin
-      if AnsiUpperCase(Params.Items[x].Name) = 'COD' then
-       Params.ParamByName('COD').AsInteger := FCodigoAtual ;
+      if AnsiUpperCase(CDSCadastro.Params.Items[x].Name) = 'COD' then
+       CDSCadastro.Params.ParamByName('COD').AsInteger := FCodigoAtual ;
     end;
   end;
 end;
 
+procedure TDMPaiCadastro.CDSCadastroNewRecord(DataSet: TDataSet);
+begin
+ CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Generator);
+ //CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:= DMConexao.Executecommand('SELECT GEN_ID ('+ FclassFilha.Generator +',1) FROM RDB$DATABASE');
+ FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger;
+end;
+
+
 procedure TDMPaiCadastro.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection.SQLConnection := DmConexao.SQLConnection;
-  CDSCadastro.ProviderName           := 'DSPCadastro';
-  CDSCadastro.RemoteServer           := DSProviderConnection;
+  CDSCadastro.ProviderName   := 'DSPCadastro';
+  CDSCadastro.RemoteServer   := DSProviderConnection;
 
   CDSCadastro.FetchParams;
   CDSCadastro.Open;
+
+
 end;
 
 procedure TDMPaiCadastro.Primeiro;

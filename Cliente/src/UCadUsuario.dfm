@@ -5,10 +5,6 @@
   TextHeight = 13
   inherited PageControl1: TPageControl
     inherited TabSheet1: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 449
-      ExplicitHeight = 326
       object Usuário: TLabel
         Left = 40
         Top = 62
@@ -28,6 +24,8 @@
         Top = 81
         Width = 353
         Height = 21
+        DataField = 'NOME_USUARIO'
+        DataSource = DS
         TabOrder = 0
       end
       object dbSenha: TDBEdit
@@ -35,11 +33,14 @@
         Top = 186
         Width = 353
         Height = 21
+        DataField = 'SENHA_USUARIO'
+        DataSource = DS
         TabOrder = 1
       end
     end
   end
   inherited Panel2: TPanel
     Caption = ''
+    Color = clActiveCaption
   end
 end

@@ -17,6 +17,7 @@ object DMConexao: TDMConexao
         '.Data.DbxClientDriver,Version=24.0.0.0,Culture=neutral,PublicKey' +
         'Token=91d62ebb5b0d1b1b'
       'Filters={}')
+    Connected = True
     Left = 192
     Top = 120
   end

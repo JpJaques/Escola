@@ -26,7 +26,7 @@ implementation
 
 procedure TSMCadUsuario.DSServerCreate_Filho(Sender: TObject);
 begin
-  FClassefilha := TClassUsuario.Create;
+  FClassefilha := TClassUsuario;
   inherited;
 
 end;

@@ -10,6 +10,7 @@ type
   TDMConexao = class(TDataModule)
     SQLConnection: TSQLConnection;
     procedure DataModuleCreate(Sender: TObject);
+
   private
     FInstanceOwner: Boolean;
     FServerMethodsClient: TServerMethodsClient;
@@ -22,6 +23,9 @@ type
     property ServerMethodsClient: TServerMethodsClient read GetServerMethodsClient write FServerMethodsClient;
     function ExecuteMethods(Const Metodo: String; Const Parametros: array of Olevariant):Olevariant;
     function ExecuteReader(Sql:String):Olevariant;
+    function Scalar(Sql:String): variant;
+    function GerarCodigo(NomeGenerator: string): integer;
+    Procedure Executecommand(SQL:String);
 
   end;
 
@@ -50,6 +54,8 @@ begin
   FServerMethodsClient.Free;
   inherited;
 end;
+
+
 
 function TDMConexao.ExecuteMethods(const Metodo: String;
   const Parametros: array of Olevariant): Olevariant;
@@ -177,7 +183,22 @@ end;
 
 function TDMConexao.ExecuteReader(Sql: String): Olevariant;
 begin
-  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteReader', [Sql])
+  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteReader', [Sql]);
+end;
+
+procedure TDMConexao.Executecommand(SQL: String);
+begin
+  DMConexao.ExecuteMethods('TSMConexao.ExecuteCommand', [SQL]);
+end;
+
+function TDMConexao.Scalar(Sql: String): variant;
+begin
+  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteScalar', [Sql]);
+end;
+
+function TDMConexao.GerarCodigo(NomeGenerator: string): integer;
+begin
+ Result:= DMConexao.ExecuteMethods('TSMConexao.GerarCodigo',[NomeGenerator]);
 end;
 
 function TDMConexao.GetServerMethodsClient: TServerMethodsClient;
@@ -189,6 +210,8 @@ begin
   end;
   Result := FServerMethodsClient;
 end;
+
+
 
 end.
 
