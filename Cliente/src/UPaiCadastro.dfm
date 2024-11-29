@@ -21,8 +21,6 @@ object FPaiCadastro: TFPaiCadastro
     Width = 632
     Height = 41
     Align = alTop
-    Color = clSkyBlue
-    ParentBackground = False
     TabOrder = 0
     OnExit = PanelPaiExit
     object Codigo: TLabel
@@ -41,7 +39,6 @@ object FPaiCadastro: TFPaiCadastro
       TabOrder = 0
       DecimalPlacesAlwaysShown = False
       OnButtonClick = EditCodigoButtonClick
-      OnExit = EditCodigoExit
       OnKeyPress = EditCodigoKeyPress
     end
     object Anterior: TButton
@@ -98,7 +95,7 @@ object FPaiCadastro: TFPaiCadastro
     Width = 163
     Height = 354
     Caption = ' '
-    Color = clGradientInactiveCaption
+    Color = clMenu
     ParentBackground = False
     TabOrder = 1
     object Incluir: TButton

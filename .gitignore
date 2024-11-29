@@ -6,7 +6,6 @@
 __history
 *.ico
 *.png
-*.zip
 *.dcu
 *.bmp
 *.ini
@@ -22,3 +21,4 @@ Cliente/Cliente.exe
 *.res
 *.FDB
 *.dproj
+/UnitsRemovidas

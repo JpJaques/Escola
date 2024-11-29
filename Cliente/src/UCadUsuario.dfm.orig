@@ -28,9 +28,12 @@
         Top = 81
         Width = 353
         Height = 21
+<<<<<<< HEAD
         CharCase = ecUpperCase
         DataField = 'NOME_USUARIO'
         DataSource = DS
+=======
+>>>>>>> Developer
         TabOrder = 0
       end
       object dbSenha: TDBEdit
@@ -38,15 +41,17 @@
         Top = 186
         Width = 353
         Height = 21
+<<<<<<< HEAD
         DataField = 'SENHA_USUARIO'
         DataSource = DS
         PasswordChar = '*'
+=======
+>>>>>>> Developer
         TabOrder = 1
       end
     end
   end
   inherited Panel2: TPanel
     Caption = ''
-    Color = clActiveCaption
   end
 end

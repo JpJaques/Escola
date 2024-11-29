@@ -16,7 +16,8 @@ uses
   ClassUsuario in 'Classes\ClassUsuario.pas',
   UDMCadUsuario in 'src\UDMCadUsuario.pas' {DMCadUsuario: TDataModule},
   UFLogin in 'src\UFLogin.pas' {frmLogin},
-  UFSplash in 'src\UFSplash.pas', System.SysUtils {FrmSplash};
+  UFSplash in 'src\UFSplash.pas',
+  System.SysUtils {FrmSplash};
 
 {$R *.res}
 

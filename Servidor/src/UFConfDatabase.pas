@@ -39,8 +39,7 @@ type
     btnCancelar: TJvSpeedButton;
     DialogoDatabase: TJvOpenDialog;
     lblMensagem: TJvLabel;
-    btnMetadata: TButton;
-    Button1: TButton;
+    btnManutencao: TButton;
     procedure FormCreate(Sender: TObject);
     procedure btnTestarClick(Sender: TObject);
     procedure btnConfirmarClick(Sender: TObject);
@@ -50,11 +49,9 @@ type
     procedure edtCaminhoMouseLeave(Sender: TObject);
     procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnMetadataClick(Sender: TObject);
-    procedure btnCriaDatabaseClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure btnManutencaoClick(Sender: TObject);
   private
-    FIni:      TIniConfigDatabase;
+    FIni: TIniConfigDatabase;
   public
     Function TestaConexao:String;
 
@@ -63,8 +60,9 @@ type
 
 implementation
 uses
-  UFPrincipal,
-  UMetadataDatabase, USMConexao;
+  USMConexao,
+  UFManutencaoDatabase,
+  UFPrincipal;
 
 {$R *.dfm}
 
@@ -98,17 +96,16 @@ begin
   Self.Close;
 end;
 
-procedure TFConfDatabase.btnCriaDatabaseClick(Sender: TObject);
+procedure TFConfDatabase.btnManutencaoClick(Sender: TObject);
+var
+  LFManDB: TFManutencaoDatabase;
 begin
-  //
-  TMetadataDatabase.CriarDatabase;
-
-end;
-
-procedure TFConfDatabase.btnMetadataClick(Sender: TObject);
-begin
-//
-  TMetadataDatabase.GerarMetadata;
+  LFManDB := TFManutencaoDatabase.Create(Self);
+  try
+    LFManDB.ShowModal;
+  finally
+    FreeAndNil(LFManDB);
+  end;
 end;
 
 procedure TFConfDatabase.edtCaminhoDblClick(Sender: TObject);
@@ -170,7 +167,7 @@ begin
   else
     LDatabase := edtCaminho.Text;
 
-  Result := SMConexao.TestaConexao(edtUsuario.Text,
+  Result := SMConexao.TestaConexao_1(edtUsuario.Text,
                                   edtSenha.Text,
                                   LDatabase);
 end;
@@ -193,11 +190,6 @@ begin
     lblMensagem.Font.Size := 10;
   end;
 
-end;
-
-procedure TFConfDatabase.Button1Click(Sender: TObject);
-begin
-  TMetadataDatabase.CriarDatabase;
 end;
 
 end.

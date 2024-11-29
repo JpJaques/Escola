@@ -2,8 +2,8 @@ object FConfDatabase: TFConfDatabase
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
-  ClientHeight = 334
-  ClientWidth = 537
+  ClientHeight = 273
+  ClientWidth = 602
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object FConfDatabase: TFConfDatabase
   object pnlFundo: TJvPanel
     Left = 0
     Top = 0
-    Width = 537
-    Height = 334
+    Width = 602
+    Height = 273
     Align = alClient
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -53,8 +53,8 @@ object FConfDatabase: TFConfDatabase
     end
     object lblMensagem: TJvLabel
       Left = 0
-      Top = 317
-      Width = 533
+      Top = 256
+      Width = 598
       Height = 13
       Align = alBottom
       Transparent = True
@@ -94,7 +94,7 @@ object FConfDatabase: TFConfDatabase
     object edtCaminho: TJvEdit
       Left = 6
       Top = 72
-      Width = 475
+      Width = 587
       Height = 21
       Hint = 'Click 2 Vezes para Abir Caixa de Pesquisa'
       Flat = False
@@ -136,24 +136,14 @@ object FConfDatabase: TFConfDatabase
       Text = ''
       TextHint = 'SENHA'
     end
-    object btnMetadata: TButton
+    object btnManutencao: TButton
       Left = 320
       Top = 212
       Width = 91
       Height = 25
-      Caption = 'Gerar Metadata'
+      Caption = 'Manuten'#231#227'o'
       TabOrder = 5
-      OnClick = btnMetadataClick
-    end
-    object Button1: TButton
-      Left = 417
-      Top = 212
-      Width = 91
-      Height = 25
-      Caption = 'Criar Database'
-      TabOrder = 6
-      Visible = False
-      OnClick = Button1Click
+      OnClick = btnManutencaoClick
     end
   end
   object DialogoDatabase: TJvOpenDialog

@@ -26,7 +26,7 @@ implementation
 
 procedure TDMCadUsuario.DataModuleCreate(Sender: TObject);
 begin
-  FClassFilha := TClassUsuario;
+  FClassFilha := TClassUsuario.Create;
   DSProviderConnection.ServerClassName := 'TSMCadUsuario';
   inherited;
 

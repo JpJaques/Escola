@@ -778,11 +778,14 @@ object FPrincipal: TFPrincipal
           ExplicitWidth = 44
         end
         object lblStatus: TJvLabel
-          Left = 0
-          Top = 21
-          Width = 182
-          Height = 174
-          Align = alClient
+          AlignWithMargins = True
+          Left = 3
+          Top = 24
+          Width = 169
+          Height = 136
+          Margins.Bottom = 35
+          Align = alLeft
+          AutoSize = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = cl3DDkShadow
           Font.Height = -16
@@ -790,13 +793,15 @@ object FPrincipal: TFPrincipal
           Font.Style = []
           ParentFont = False
           Transparent = True
+          WordWrap = True
           HotTrackFont.Charset = DEFAULT_CHARSET
           HotTrackFont.Color = clWindowText
           HotTrackFont.Height = -16
           HotTrackFont.Name = 'Segoe UI'
           HotTrackFont.Style = []
-          ExplicitWidth = 6
-          ExplicitHeight = 21
+          ExplicitLeft = 0
+          ExplicitTop = 21
+          ExplicitHeight = 174
         end
         object lblCompilacao: TJvLabel
           Left = 0

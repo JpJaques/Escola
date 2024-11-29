@@ -1,0 +1,1 @@
+Instale o Database Comparer para Utilizar a comparação de bancos de dados.

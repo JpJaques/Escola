@@ -80,6 +80,8 @@ type
     procedure pnlTopoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure imgConfigServidorClick(Sender: TObject);
   private
+
+    ServerContainer   : TServerContainer;
     HintTrayIcon      : string;
     FTesteConexao     : string;
     GConexoes         : Boolean;
@@ -94,7 +96,6 @@ type
     procedure ExibirMensagensStatus;
 
   public
-   // property Conexao : TSMConexao read SMConexao;
     property ConfirmaDBConf: Boolean read FConfirmaDBConf write FConfirmaDBConf;
   end;
 
@@ -140,8 +141,8 @@ begin
   begin
     lblStatus.Font.Name  := 'Segoe UI';
     lblStatus.Font.Color := StringToColor('$800000');
-    lblStatus.Font.Size  := 12;
-    lblStatus.WordWrap   := False;
+    lblStatus.Font.Size  := 10;
+    lblStatus.WordWrap   := True;
     lblStatus.Alignment  := taLeftJustify;
     lblStatus.Caption    := Format('Servidor Conectado na Porta %d',[ServerContainer.DSTCPServerTransport.Port]);
   end;
@@ -250,8 +251,13 @@ end;
 
 procedure TFPrincipal.Inicializar;
 begin
-  FTesteConexao := EmptyStr;
-  FTesteConexao := SMConexao.TestaConexao_1;
+
+
+
+    FTesteConexao := EmptyStr;
+    FTesteConexao := SMConexao.TestaConexao;
+
+
 
   if (Trim(FTesteConexao).Equals(EmptyStr)) then
     IniciarAplicacao
@@ -268,7 +274,6 @@ begin
 
   try
     ServerContainer.DSServer.Start;
-
     ExibirMensagensStatus;
   except
     on E:Exception do
@@ -286,8 +291,10 @@ end;
 
 procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
+
+
   SMConexao            := TSMConexao.Create(Self);
-  ServerContainer      := TServerContainer.Create(Self);
+  ServerContainer := TServerContainer.Create(Self);
   Inicializar;
   Application.ShowHint := True;
   GConexoes            := False;

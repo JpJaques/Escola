@@ -5,7 +5,7 @@ object FPrincipal: TFPrincipal
   Caption = 'Menu Principal'
   ClientHeight = 350
   ClientWidth = 675
-  Color = clActiveCaption
+  Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
