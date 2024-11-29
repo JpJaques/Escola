@@ -23,9 +23,10 @@ type
     property ServerMethodsClient: TServerMethodsClient read GetServerMethodsClient write FServerMethodsClient;
     function ExecuteMethods(Const Metodo: String; Const Parametros: array of Olevariant):Olevariant;
     function ExecuteReader(Sql:String):Olevariant;
-    function Scalar(Sql:String): variant;
+    function ExecuteScalar(Sql:String):Olevariant;
     function GerarCodigo(NomeGenerator: string): integer;
     Procedure Executecommand(SQL:String);
+    // function NovoExecuteScalar(Sql:String): Integer;
 
   end;
 
@@ -191,9 +192,9 @@ begin
   DMConexao.ExecuteMethods('TSMConexao.ExecuteCommand', [SQL]);
 end;
 
-function TDMConexao.Scalar(Sql: String): variant;
+function TDMConexao.ExecuteScalar(Sql: String): Olevariant;
 begin
-  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteScalar', [Sql]);
+  Result :=  DmConexao.ExecuteMethods('TSMConexao.ExecuteScalar', [Sql, True]);
 end;
 
 function TDMConexao.GerarCodigo(NomeGenerator: string): integer;
@@ -210,7 +211,6 @@ begin
   end;
   Result := FServerMethodsClient;
 end;
-
 
 
 end.

@@ -89,9 +89,9 @@ end;
 
 procedure TFPaiCadastro.EditCodigoKeyPress(Sender: TObject; var Key: Char);
 begin
-   //DMCadastro.AbrirRegistro(EditCodigo.AsInteger);
-   //if (key = #13) then
-   //Perform(WM_NEXTDLGCTL, 0 ,0);
+   DMCadastro.AbrirRegistro(EditCodigo.AsInteger);
+   if (key = #13) then
+   Perform(WM_NEXTDLGCTL, 0 ,0);
   Abort
 end;
 
@@ -107,21 +107,20 @@ procedure TFPaiCadastro.FormCreate(Sender: TObject);
 begin
   DS.DataSet:= DMCadastro.CDSCadastro;
   DMCadastro.AbrirRegistro(1);
+  EditCodigo.Text:=Inttostr(DMcadastro.CodigoAtual)
 end;
 
 procedure TFPaiCadastro.GravarClick(Sender: TObject);
 begin
-  DS.DataSet.Post;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
+  DS.DataSet.Post;
+  ShowMessage('Registro Salvo com Sucesso');
 end;
 
 procedure TFPaiCadastro.IncluirClick(Sender: TObject);
 begin
-  DMCadastro.AbrirRegistro(DMCadastro.CodigoAtual);
+  EditCodigo.AsInteger:= 0;
   DS.DataSet.Insert;
-  EditCodigo.AsInteger := 0;
-
-
 end;
 
 procedure TFPaiCadastro.PanelPaiExit(Sender: TObject);
@@ -140,7 +139,7 @@ end;
 
 procedure TFPaiCadastro.ProximoClick(Sender: TObject);
 begin
-  //DMCadastro.Proximo;
+  DMCadastro.ProximoCodigo;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
 end;
 
@@ -152,7 +151,7 @@ end;
 
 procedure TFPaiCadastro.UltimoClick(Sender: TObject);
 begin
-  //DMCadastro.Ultimo;
+  DMCadastro.UltimoCOdigo;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
 end;
 

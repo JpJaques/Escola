@@ -7,7 +7,11 @@ object DMPaiCadastro: TDMPaiCadastro
     Aggregates = <>
     Params = <>
     BeforeOpen = CDSCadastroBeforeOpen
+    AfterOpen = CDSCadastroAfterOpen
+    AfterPost = CDSCadastroAfterPost
+    AfterDelete = CDSCadastroAfterDelete
     OnNewRecord = CDSCadastroNewRecord
+    OnReconcileError = CDSCadastroReconcileError
     Left = 55
     Top = 175
   end

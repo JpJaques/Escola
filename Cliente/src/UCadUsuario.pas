@@ -15,6 +15,7 @@ type
     Usuário: TLabel;
     Senha: TLabel;
     procedure FormCreate(Sender: TObject);
+    procedure IncluirClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -37,6 +38,12 @@ begin
   DMCadastro := TDMCadUsuario.Create(self);
   inherited;
 
+end;
+
+procedure TFCadUsuarios.IncluirClick(Sender: TObject);
+begin
+  inherited;
+ dbNome.SetFocus;
 end;
 
 End.

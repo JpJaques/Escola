@@ -19,7 +19,7 @@ Vcl.Menus,
 Vcl.Imaging.jpeg,
 Vcl.ExtCtrls,
 UCadUsuario,
-System.UITypes;
+System.UITypes, Vcl.Imaging.pngimage, Vcl.StdCtrls;
 
 type
   TFPrincipal = class(TForm)
@@ -28,9 +28,13 @@ type
     Manuteno1: TMenuItem;
     Utilitarios1: TMenuItem;
     Usurio1: TMenuItem;
-    img1: TImage;
+    PanelInferior: TPanel;
+    Panel1: TPanel;
+    Timer1: TTimer;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Usurio1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     { Private declarations }
     procedure Inicializar;
@@ -71,6 +75,20 @@ begin
 
   end;
 
+end;
+
+procedure TFPrincipal.Timer1Timer(Sender: TObject);
+begin
+  Label1.Caption := '   -   ' + timetostr(time);
+
+  if (time >= strtotime('00:00:00')) and (time < strtotime('11:59:59')) then
+    Label1.Caption := 'Bom Dia,';
+  if (time >= strtotime('12:00:00')) and (time < strtotime('17:59:59')) then
+    Label1.Caption := 'Boa Tarde,';
+  if (time >= strtotime('18:00:00')) and (time < strtotime('23:59:59')) then
+    Label1.Caption := 'Boa Noite,';
+  Label1.Caption := Label1.Caption + ' Hoje é ' +
+    formatdatetime('dddd d ''de'' mmmmmm ''de'' yyyy', Date);
 end;
 
 procedure TFPrincipal.Usurio1Click(Sender: TObject);

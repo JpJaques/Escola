@@ -63,7 +63,7 @@ object FPaiCadastro: TFPaiCadastro
       OnClick = ProximoClick
     end
     object Ultimo: TButton
-      Left = 600
+      Left = 602
       Top = 2
       Width = 30
       Height = 33

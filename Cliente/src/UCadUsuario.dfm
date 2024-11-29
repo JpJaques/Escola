@@ -24,6 +24,7 @@
         Top = 81
         Width = 353
         Height = 21
+        CharCase = ecUpperCase
         DataField = 'NOME_USUARIO'
         DataSource = DS
         TabOrder = 0
@@ -35,6 +36,7 @@
         Height = 21
         DataField = 'SENHA_USUARIO'
         DataSource = DS
+        PasswordChar = '*'
         TabOrder = 1
       end
     end

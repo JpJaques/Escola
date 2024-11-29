@@ -34,6 +34,7 @@ begin
   //TStyleManager.TrySetStyle('Golden Graphite');
 
   FrmSplash.Passo(20,'Carregando Arquivo Conexão.');
+  TStyleManager.TrySetStyle('Tablet Light');
   Application.CreateForm(TFPrincipal, FPrincipal);
   Application.CreateForm(TDMConexao, DMConexao);
   FrmSplash.Passo(40,'Criando Configurações.');

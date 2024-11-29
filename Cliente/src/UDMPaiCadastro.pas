@@ -12,6 +12,12 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure CDSCadastroBeforeOpen(DataSet: TDataSet);
     procedure CDSCadastroNewRecord(DataSet: TDataSet);
+    procedure CDSCadastroAfterPost(DataSet: TDataSet);
+    procedure CDSCadastroAfterDelete(DataSet: TDataSet);
+    procedure CDSCadastroReconcileError(DataSet: TCustomClientDataSet;
+      E: EReconcileError; UpdateKind: TUpdateKind;
+      var Action: TReconcileAction);
+    procedure CDSCadastroAfterOpen(DataSet: TDataSet);
   private
     FCodigoAtual: Integer;
   public
@@ -44,9 +50,19 @@ begin
   end;
 end;
 
-procedure TDMPaiCadastro.Anterior;
+procedure TDMPaiCadastro.CDSCadastroAfterDelete(DataSet: TDataSet);
 begin
+ CDSCadastro.ApplyUpdates(-1);
+end;
 
+procedure TDMPaiCadastro.CDSCadastroAfterOpen(DataSet: TDataSet);
+begin
+ FclassFilha.ConfigurarPropriedadesDosCampos(DataSet.Fields);
+end;
+
+procedure TDMPaiCadastro.CDSCadastroAfterPost(DataSet: TDataSet);
+begin
+ CDSCadastro.ApplyUpdates(-1);
 end;
 
 procedure TDMPaiCadastro.CDSCadastroBeforeOpen(DataSet: TDataSet);
@@ -65,11 +81,17 @@ end;
 
 procedure TDMPaiCadastro.CDSCadastroNewRecord(DataSet: TDataSet);
 begin
- CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Generator);
- //CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger:= DMConexao.Executecommand('SELECT GEN_ID ('+ FclassFilha.Generator +',1) FROM RDB$DATABASE');
- FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoChave).AsInteger;
+ CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Generator);
+ FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger;
 end;
 
+
+procedure TDMPaiCadastro.CDSCadastroReconcileError(
+  DataSet: TCustomClientDataSet; E: EReconcileError; UpdateKind: TUpdateKind;
+  var Action: TReconcileAction);
+begin
+ raise Exception.Create(E.Message);
+end;
 
 procedure TDMPaiCadastro.DataModuleCreate(Sender: TObject);
 begin
@@ -85,17 +107,33 @@ end;
 
 procedure TDMPaiCadastro.Primeiro;
 begin
-
+  FcodigoAtual:= DMConexao.ExecuteScalar('select min (' + FclassFilha.CampoCodigo +  ') from ' + FclassFilha.Tabela);
+  AbrirRegistro(FcodigoAtual);
 end;
 
 procedure TDMPaiCadastro.ProximoCodigo;
+var
+ codigo:Integer;
 begin
+ codigo:= DMConexao.ExecuteScalar('select coalesce (min (' + FclassFilha.CampoCodigo + '), -1) from ' + FclassFilha.Tabela + ' where ' + FclassFilha.CampoCodigo + ' > ' + InttoStr(FCodigoAtual) );
+ if Codigo > -1 then
+ AbrirRegistro(codigo);
 
+end;
+
+procedure TDMPaiCadastro.Anterior;
+Var
+ codigo:Integer;
+begin
+ codigo:= DMConexao.ExecuteScalar('Select coalesce (max (' + FclassFilha.CampoCodigo + '), -1)From ' + FclassFilha.Tabela + ' where ' + FclassFilha.CampoCodigo + ' < ' + IntToStr(FcodigoAtual));
+ if codigo > 0 then
+ AbrirRegistro(codigo);
 end;
 
 procedure TDMPaiCadastro.UltimoCOdigo;
 begin
-
+  FcodigoAtual:=DMConexao.ExecuteScalar('Select max(' + FclassFilha.CampoCodigo + ') from ' + FclassFilha.Tabela);
+  AbrirRegistro(FcodigoAtual);
 end;
 
 end.

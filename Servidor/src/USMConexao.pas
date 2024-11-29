@@ -40,9 +40,10 @@ type
     function  GerarCodigo(NomeGenerator: string): integer;
     function  TestaConexao_1:string;
     function  TestaConexao(const AUser, ASenha, ADatabase: String):string;
+    function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): OleVariant;
     function  ExecuteReader(ASQL: String; CriarTransacao : Boolean = True):OleVariant;
     procedure ExecuteCommand(ASQL: string; AParam: TParams = nil; CriarTransacao: Boolean = True);
-    function  ExecuteScalar(ASQL: string; CriarTransacao : Boolean = True): Variant;
+
   end;
 
 var
@@ -134,7 +135,7 @@ begin
   end;
 end;
 
-function TSMConexao.ExecuteScalar(ASQL: string;CriarTransacao: Boolean): Variant;
+function TSMConexao.ExecuteScalar(ASQL: string;CriarTransacao: Boolean): OleVariant;
 var
   Transacao: TDBXTransaction;
   LSQLDS:    TSQLDataSet;
@@ -146,7 +147,13 @@ begin
     LSQLDS.CommandText   := ASQL;
 
     try
-      LSQLDS.ExecSQL;
+      IF CriarTransacao THEN
+      begin
+        Transacao :=  GetConection.BeginTransaction;
+      end;
+
+      LSQLDS.Open ;
+
 
       case LSQLDS.Fields[0].DataType of
         ftString:   Result := LSQLDS.Fields[0].AsString;
@@ -208,6 +215,7 @@ begin
     DBParamConfig.Free;
   end;
 end;
+
 
 procedure TSMConexao.CriaCDSMonitorarConexoes;
 begin
