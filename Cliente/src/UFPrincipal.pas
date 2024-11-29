@@ -48,6 +48,7 @@ implementation
 procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
   Inicializar;
+  DMconexao := TDMConexao.Create(Self);
 end;
 
 procedure TFPrincipal.Inicializar;
@@ -55,7 +56,6 @@ var
   MensagemRetorno : string;
   FConfigConexao  : TFConfigCliente;
 begin
-  DMconexao    := TDMConexao.Create(Self);
   MensagemRetorno := UInicializacao.RealizaConexao;
   if not (Trim(MensagemRetorno) = '') then
   begin
@@ -63,7 +63,11 @@ begin
        mtError,[mbOK, mbNo],0)= mrOk) then
     begin
       FConfigConexao := TFConfigCliente.Create(nil);
-      FConfigConexao.ShowModal;
+      try
+        FConfigConexao.ShowModal;
+      finally
+        FConfigConexao.Free;
+      end;
       Inicializar;
     end
     else

@@ -33,7 +33,7 @@ begin
   //TStyleManager.TrySetStyle('Golden Graphite');
 
   FrmSplash.Passo(20,'Carregando Arquivo Conexão.');
-  Application.CreateForm(TDMConexao, DMConexao);
+  // Aqui Deverá Creiar o DM?
   FrmSplash.Passo(40,'Criando Configurações.');
 
   FrmSplash.Passo(50,'Criando FPrincipal.');

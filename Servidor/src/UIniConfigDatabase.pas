@@ -42,12 +42,9 @@ implementation
 { TIniConfigDatabase }
 
 constructor TIniConfigDatabase.Create;
-var
-  LIniFile, LDir: string;
 begin
   FIni := TIni.Create(SECTION);
 end;
-
 
 destructor TIniConfigDatabase.Destroy;
 begin

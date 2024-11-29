@@ -50,6 +50,7 @@ type
     procedure pnlFundoMouseDown(Sender: TObject; Button: TMouseButton;Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnManutencaoClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     FIni: TIniConfigDatabase;
   public
@@ -190,6 +191,11 @@ begin
     lblMensagem.Font.Size := 10;
   end;
 
+end;
+
+procedure TFConfDatabase.Button1Click(Sender: TObject);
+begin
+  ShowMessage(ExtractFilePath(Application.ExeName));
 end;
 
 end.

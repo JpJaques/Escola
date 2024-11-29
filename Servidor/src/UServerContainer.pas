@@ -13,6 +13,8 @@ IPPeerAPI,
 Datasnap.DSAuth,
 System.IniFiles,
 URegistraClasseServidora;
+
+
 type
   TServerContainer = class(TDataModule)
     DSServer: TDSServer;
@@ -43,11 +45,9 @@ begin
   URegistraClasseServidora.RegistraClasseServidora(Self,DSServer);
 end;
 
-
 procedure TServerContainer.DSTCPServerTransportConnect(
   Event: TDSTCPConnectEventObject);
 begin
-
   SMConexao.RegistraConexao(Event);
 end;
 

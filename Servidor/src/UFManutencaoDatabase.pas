@@ -35,8 +35,12 @@ FireDAC.Phys.FBDef,
 FireDAC.Phys.FB,
 FireDAC.Comp.ScriptCommands,
 FireDAC.Stan.Util,
-FireDAC.Stan.Def, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf,
-  FireDAC.Comp.UI;
+FireDAC.Stan.Def,
+FireDAC.UI.Intf,
+FireDAC.VCLUI.Wait,
+FireDAC.Stan.Intf,
+FireDAC.Comp.UI,
+System.UITypes;
 
 type
   TFManutencaoDatabase = class(TForm)
@@ -101,6 +105,7 @@ type
     procedure DBComparerBeforeExtractTarget(Sender: TObject);
     procedure DBComparerAfterExtractMaster(Sender: TObject);
     procedure DBComparerAfterExtractTarget(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     const
@@ -109,11 +114,14 @@ type
       cFDB    = 'FDB';
       cSQL    = 'SQL';
 
+    Procedure DialogFilter(Const ATitulo,ArqDefaut, AFilter: string);
     procedure TestarConexao;
     Procedure LimparMemos;
     procedure AntesConectar(Sender: TObject);
     procedure AdicionarLog(const AText: String);
-    procedure ValidarBancoOrigemTarget();
+    procedure CriarDatabaseOrigem;
+    procedure ValidarBancoOrigemTarget;
+    procedure ExecutarScript(AConn : TFDConnection; const Arquivo: String = '');
     function ParamsDatabase(const ADatabase: String): string;
     function PathDatabase:string;
     function GetFDConn(Const ADatabase:String):TFDConnection;
@@ -131,6 +139,116 @@ implementation
 procedure TFManutencaoDatabase.btnFecharClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TFManutencaoDatabase.CriarDatabaseOrigem;
+var
+ LDB, ArqOrigem: string;
+ Conn: TFDConnection;
+begin
+  LimparMemos;
+  LDB := PathDatabase + 'ORIGEM.FDB';
+
+  if not FileExists(PathDatabase + 'ORIGEM.SQL') then
+  begin
+    if (MessageDlg('Arquivo de Script de Origem não encontrado no diretório, Deseja Seleciona-lo Manualmente?',mtConfirmation,[mbYes, mbNo],0) = mrYes) then
+    begin
+      DialogFilter('Selecione o arquivo de Script SQL.', '*.SQL', 'SQL|*.sql|');
+      if OpenDialog.Execute then
+        ArqOrigem := OpenDialog.FileName;
+
+      if not ArqOrigem.Contains(Uppercase('.sql')) then
+      begin
+        ShowMessage('Arquivo de Script Inválido!');
+        Exit;
+      end;
+    end
+    else
+      Exit;
+  end;
+
+  Conn := TFDConnection.Create(Self);
+  try
+    Conn.Close;
+    Conn.LoginPrompt := False;
+    Conn.Connected   := False;
+    Conn.DriverName  := 'FB';
+    Conn.Params.Text :=
+      'User_Name=SYSDBA       ' + #13 +
+      'Database=' + Format('%s.FDB',[PathDatabase + 'ORIGEM']) + #13 +
+      'Password=masterkey     ' + #13 +
+      'Server=Localhost       ' + #13 +
+      'Port=3055              ' + #13 +
+      'CharacterSet=ISO8859_1 ' + #13 +
+      'DriverID=FB ';
+
+    try
+      Conn.Open;
+      if (MessageDlg('Banco Origem.FDB já Existe no Diretorio Atual!' +#13+ 'Deseja Apenas Executar os Scripts?',mtConfirmation,[mbYes, mbNo],0) = mrYes) then
+      begin
+        if ArqOrigem.IsEmpty then
+          ExecutarScript(Conn)
+        else
+          ExecutarScript(Conn, ArqOrigem);
+      end;
+
+    Except
+      on E:Exception do
+      begin
+        Conn.Close;
+        if (MessageDlg('Banco Origem.FDB NÃO Existe no Diretorio Atual!' +#13+ 'Deseja Criar o banco e Executar os Scripts?',mtConfirmation,[mbYes, mbNo],0) = mrYes) then
+        begin
+          Conn.BeforeConnect := AntesConectar;
+          Conn.Open;
+          if ArqOrigem.IsEmpty then
+            ExecutarScript(Conn)
+          else
+            ExecutarScript(Conn, ArqOrigem);
+        end;
+      end;
+    end;
+
+    Conn.Close;
+  finally
+    Conn.Free;
+  end;
+end;
+
+procedure TFManutencaoDatabase.ExecutarScript(AConn : TFDConnection; const Arquivo: String);
+var LScript: TFDScript;
+LTransaction: TFDTransaction;
+begin
+  if not cbExecutaScript.Checked then
+    Exit;
+
+  try
+    LScript      := TFDScript.Create(Self);
+    LTransaction := TFDTransaction.Create(Self);
+    LTransaction.Options.DisconnectAction := xdRollback;
+    LScript.Connection := AConn;
+    AConn.Transaction  := LTransaction;
+    try
+      AConn.StartTransaction;
+      if Arquivo.IsEmpty then
+        LScript.SQLScriptFileName := Format('%s.SQL',[PathDatabase + cORIGEM])
+      else
+        LScript.SQLScriptFileName := Arquivo;
+
+
+      LScript.ValidateAll;
+      LScript.ExecuteAll;
+      AConn.Commit;
+    Except
+      on E:Exception do
+      begin
+        AConn.Rollback;
+        raise Exception.Create(E.Message);
+      end;
+    end;
+  finally
+    FreeAndNil(LScript);
+    FreeAndNil(LTransaction)
+  end;
 end;
 
 procedure TFManutencaoDatabase.DBComparerAfterExtractMaster(Sender: TObject);
@@ -164,6 +282,13 @@ begin
   AdicionarLog(LogText);
 end;
 
+Procedure TFManutencaoDatabase.DialogFilter(Const ATitulo,ArqDefaut, AFilter: string);
+begin
+  OpenDialog.Title      := ATitulo;
+  OpenDialog.DefaultExt := ArqDefaut;
+  OpenDialog.Filter     := AFilter;
+end;
+
 procedure TFManutencaoDatabase.ExtractOrigemLogNextLine(Sender: TObject;LogText: string);
 begin
   AdicionarLog(LogText);
@@ -181,15 +306,9 @@ begin
 end;
 
 procedure TFManutencaoDatabase.AntesConectar(Sender: TObject);
-var LDatabase: string;
 begin
-  LDatabase := Format('%s.FDB',[PathDatabase + 'ORIGEM']);
-
   if Sender is TFDConnection then
-  begin
-    TFDConnection(Sender).Params.Database := LDatabase;
-    TFDConnection(Sender).Params.Values['CreateDatabase'] := BoolToStr(not FileExists(LDatabase), True);
-  end;
+    TFDConnection(Sender).Params.Values['CreateDatabase'] := BoolToStr(not FileExists(Format('%s.FDB',[PathDatabase + 'ORIGEM'])), True);
 end;
 
 procedure TFManutencaoDatabase.btnCompararClick(Sender: TObject);
@@ -244,83 +363,8 @@ begin
 end;
 
 procedure TFManutencaoDatabase.btnCriarBancoOrigemClick(Sender: TObject);
-var
- LDB: string;
- Conn: TFDConnection;
- Script : TFDScript;
- Transaction: TFDTransaction;
 begin
-  LimparMemos;
-  LDB := PathDatabase + 'ORIGEM.FDB';
-  if FileExists(LDB) then
-  begin
-    ShowMessage('Arquivo de Banco de Dados  ORIGEM.FDB já Existe no diretório Atual.' + #13 +
-                'O processo será Abortado!');
-    Abort;
-  end;
-
-  if not FileExists(PathDatabase + 'ORIGEM.SQL') then
-  begin
-    ShowMessage('Arquivo de Banco de Dados ORIGEM.SQL NÃO Existe no diretório Atual.' + #13 +
-                ' Execute o processo para gerar Metadata do banco de dados Primeiro.' +#13 +
-                'O processo será Abortado!');
-    Abort;
-  end;
-
-  Conn := TFDConnection.Create(Self);
-  try
-    Conn.Close;
-    Conn.LoginPrompt := False;
-    Conn.Connected   := False;
-    Conn.DriverName  := 'FB';
-    Conn.Params.Text :=
-      'User_Name=SYSDBA       ' + #13 +
-      'Password=masterkey     ' + #13 +
-      'Server=Localhost       ' + #13 +
-      'Port=3055              ' + #13 +
-      'CharacterSet=ISO8859_1 ' + #13 +
-      'DriverID=FB ';
-
-    Conn.BeforeConnect := AntesConectar;
-    try
-      Conn.Open;
-    Except
-      on E:Exception do
-        raise Exception.Create(E.Message);
-    end;
-
-    if not cbExecutaScript.Checked then
-      Exit;
-
-    try
-      Script := TFDScript.Create(Self);
-      Transaction := TFDTransaction.Create(Self);
-      Transaction.Options.DisconnectAction := xdRollback;
-      Script.Connection := Conn;
-      Conn.Transaction  := Transaction;
-      try
-        Conn.StartTransaction;
-        Script.SQLScriptFileName := Format('%s.SQL',[PathDatabase + cORIGEM]);
-        Script.ValidateAll;
-        Script.ExecuteAll;
-        Conn.Commit;
-      Except
-        on E:Exception do
-        begin
-          Conn.Rollback;
-          raise Exception.Create(E.Message);
-        end;
-      end;
-
-    finally
-      FreeAndNil(Script);
-    end;
-
-    Conn.Close;
-  finally
-    Conn.Free;
-  end;
-
+  CriarDatabaseOrigem;
 end;
 
 procedure TFManutencaoDatabase.btnExtrairClick(Sender: TObject);
@@ -331,9 +375,7 @@ begin
   LimparMemos;
   LScriptMetadata := TStringList.Create;
   try
-    OpenDialog.Title := 'Selecione o banco de dados que deseja Extrair Metadata.';
-    OpenDialog.DefaultExt := '*.fdb';
-    OpenDialog.Filter     := 'FDB|*.fdb|';
+    DialogFilter('Selecione o banco de dados que deseja Extrair Metadata.', '*.fdb', 'FDB|*.fdb|');
 
     if string(edtTarget.Text).Trim.IsEmpty then
       if OpenDialog.Execute then
@@ -356,6 +398,11 @@ begin
   finally
     LScriptMetadata.Free;
   end;
+end;
+
+procedure TFManutencaoDatabase.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
 end;
 
 procedure TFManutencaoDatabase.FormShow(Sender: TObject);
@@ -388,14 +435,7 @@ begin
     Add('Server=Localhost');
     Add('CharacterSet=ISO8859_1');
   end;
-  {
-  'User_Name=SYSDBA       ' + #13 +
-  'Password=masterkey     ' + #13 +
-  'Server=Localhost       ' + #13 +
-  'Port=3055              ' + #13 +
-  'CharacterSet=ISO8859_1 ' + #13 +
-  'DriverID=FB ';
-  }
+
   try
     LConn.Open;
     LConn.Close;
@@ -452,7 +492,7 @@ end;
 
 function TFManutencaoDatabase.PathDatabase: string;
 begin
-  Result := ExtractFilePath(ParamStr(0)) + 'Database\';
+  Result := ExtractFilePath(Application.ExeName) + '..\Database\';
 end;
 
 procedure TFManutencaoDatabase.pnlTopoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -486,15 +526,11 @@ end;
 procedure TFManutencaoDatabase.ValidarBancoOrigemTarget();
 var LMSG: string;
 begin
-  LMSG                  := 'Selecione o Arquivo .FDB para ser o Arquivo de %s';
-  OpenDialog.DefaultExt := '*.fdb';
-  OpenDialog.Filter     := 'FDB|*.fdb|';
-
+  LMSG := 'Selecione o Arquivo .FDB para ser o Arquivo de %s';
 
   if not (string(edtOrigem.Text).Contains('.FDB')) then
   begin
-    OpenDialog.Title := 'Selecione o banco ' + cORIGEM;
-
+    DialogFilter('Selecione o banco ' + cORIGEM, '*.fdb', 'FDB|*.fdb|');
     if OpenDialog.Execute then
       if String(OpenDialog.FileName).Trim.IsEmpty then
         raise Exception.Create(Format(LMSG,[cORIGEM]));
@@ -504,8 +540,7 @@ begin
 
   if not (String(edtTarget.Text).Contains('.FDB')) then
   begin
-    OpenDialog.Title := 'Selecione o banco ' + cTARGET;
-
+    DialogFilter('Selecione o banco ' + cTARGET, '*.fdb', 'FDB|*.fdb|');
     if OpenDialog.Execute then
       if String(OpenDialog.FileName).Trim.IsEmpty then
         raise Exception.Create(Format(LMSG,[cTARGET]));

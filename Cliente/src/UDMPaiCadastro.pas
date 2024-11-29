@@ -47,7 +47,7 @@ end;
 
 procedure TDMPaiCadastro.Anterior;
 begin
-
+//
 end;
 
 procedure TDMPaiCadastro.CDSCadastroBeforeOpen(DataSet: TDataSet);
@@ -69,24 +69,23 @@ begin
   DSProviderConnection.SQLConnection := DmConexao.SQLConnection;
   CDSCadastro.ProviderName           := 'DSPCadastro';
   CDSCadastro.RemoteServer           := DSProviderConnection;
-
   CDSCadastro.FetchParams;
   CDSCadastro.Open;
 end;
 
 procedure TDMPaiCadastro.Primeiro;
 begin
-
+//
 end;
 
 procedure TDMPaiCadastro.ProximoCodigo;
 begin
-
+//
 end;
 
 procedure TDMPaiCadastro.UltimoCOdigo;
 begin
-
+//
 end;
 
 end.
