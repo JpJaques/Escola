@@ -19,11 +19,20 @@ uses
   UFSplash in 'src\UFSplash.pas', System.SysUtils {FrmSplash};
 
 {$R *.res}
+var Login: TfrmLogin;
+
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   //TStyleManager.TrySetStyle('Sky');
+
+  Login := TFrmLogin.Create(Nil);
+  try
+    Login.ShowModal;
+  finally
+    Login.Free;
+  end;
 
   FrmSplash := TfrmSplash.Create(nil);
   FrmSplash.Show;
@@ -33,21 +42,18 @@ begin
   //TStyleManager.TrySetStyle('Golden Graphite');
 
   FrmSplash.Passo(20,'Carregando Arquivo Conexão.');
+
   TStyleManager.TrySetStyle('Tablet Light');
-  Application.CreateForm(TFPrincipal, FPrincipal);
-  Application.CreateForm(TDMConexao, DMConexao);
+
   FrmSplash.Passo(40,'Criando Configurações.');
 
   FrmSplash.Passo(50,'Criando FPrincipal.');
+  Application.CreateForm(TFPrincipal, FPrincipal);
 
   FrmSplash.Passo(70,'Conectando ao Banco de Dados.');
 
   FrmSplash.Passo(100,'Logando no sistema.');
-  frmLogin := UFLogin.TfrmLogin.Create(nil);
   FreeAndNil(FrmSplash);
-  frmLogin.ShowModal;
 
-
-  Application.CreateForm(TFPrincipal, FPrincipal);
   Application.Run;
 end.

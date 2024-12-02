@@ -21,7 +21,7 @@ type
   private
     FCodigoAtual: Integer;
   public
-    FClassFilha: fClassPaiCadastro;
+    FClassFilha: TClassPaiCadastro;
     //property CodigoAtual: Integer read FCodigoAtual write FCodigoAtual;//VERIFICAR O MOTIVO COM JOAO
     procedure AbrirRegistro(codigo:Integer);
     procedure ProximoCodigo;
@@ -81,7 +81,7 @@ end;
 
 procedure TDMPaiCadastro.CDSCadastroNewRecord(DataSet: TDataSet);
 begin
- CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Generator);
+ CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger:=  DMConexao.GerarCodigo(FclassFilha.Tabela);
  FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger;
 end;
 

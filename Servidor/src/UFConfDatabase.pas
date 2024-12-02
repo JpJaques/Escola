@@ -168,7 +168,7 @@ begin
   else
     LDatabase := edtCaminho.Text;
 
-  Result := SMConexao.TestaConexao_1(edtUsuario.Text,
+  Result := SMConexao.TestaConexao(edtUsuario.Text,
                                   edtSenha.Text,
                                   LDatabase);
 end;

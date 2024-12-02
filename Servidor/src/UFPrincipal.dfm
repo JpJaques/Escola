@@ -50,8 +50,8 @@ object FPrincipal: TFPrincipal
       object lblTitulo: TLabel
         Left = 1
         Top = 1
-        Width = 557
-        Height = 33
+        Width = 208
+        Height = 32
         Align = alClient
         Alignment = taCenter
         Caption = 'Aplica'#231#227'o Servidora'
@@ -62,8 +62,6 @@ object FPrincipal: TFPrincipal
         Font.Style = []
         ParentFont = False
         OnMouseDown = pnlTopoMouseDown
-        ExplicitWidth = 208
-        ExplicitHeight = 32
       end
     end
     object pnlBody: TJvPanel
@@ -758,7 +756,7 @@ object FPrincipal: TFPrincipal
         object JvLabel1: TJvLabel
           Left = 0
           Top = 0
-          Width = 182
+          Width = 44
           Height = 21
           Align = alTop
           Alignment = taCenter
@@ -775,7 +773,6 @@ object FPrincipal: TFPrincipal
           HotTrackFont.Height = -16
           HotTrackFont.Name = 'Segoe UI'
           HotTrackFont.Style = []
-          ExplicitWidth = 44
         end
         object lblStatus: TJvLabel
           AlignWithMargins = True

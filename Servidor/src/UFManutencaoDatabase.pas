@@ -215,27 +215,26 @@ begin
 end;
 
 procedure TFManutencaoDatabase.ExecutarScript(AConn : TFDConnection; const Arquivo: String);
-var LScript: TFDScript;
-LTransaction: TFDTransaction;
+var
+LScript:       TFDScript;
+LTransaction:  TFDTransaction;
+LTextoArquivo: TStringList;
 begin
   if not cbExecutaScript.Checked then
     Exit;
 
   try
+    LTextoArquivo := TStringList.Create;
+    LTextoArquivo.LoadFromFile(Arquivo);
     LScript      := TFDScript.Create(Self);
     LTransaction := TFDTransaction.Create(Self);
     LTransaction.Options.DisconnectAction := xdRollback;
     LScript.Connection := AConn;
     AConn.Transaction  := LTransaction;
     try
-      AConn.StartTransaction;
-      if Arquivo.IsEmpty then
-        LScript.SQLScriptFileName := Format('%s.SQL',[PathDatabase + cORIGEM])
-      else
-        LScript.SQLScriptFileName := Arquivo;
-
-
+      LScript.SQLScripts.Add.SQL.Text := LTextoArquivo.Text;
       LScript.ValidateAll;
+      AConn.StartTransaction;
       LScript.ExecuteAll;
       AConn.Commit;
     Except
@@ -246,6 +245,7 @@ begin
       end;
     end;
   finally
+    LTextoArquivo.Free;
     FreeAndNil(LScript);
     FreeAndNil(LTransaction)
   end;

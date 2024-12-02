@@ -251,13 +251,8 @@ end;
 
 procedure TFPrincipal.Inicializar;
 begin
-
-
-
-    FTesteConexao := EmptyStr;
-    FTesteConexao := SMConexao.TestaConexao;
-
-
+  FTesteConexao := EmptyStr;
+  FTesteConexao := SMConexao.TestaConexao_1;
 
   if (Trim(FTesteConexao).Equals(EmptyStr)) then
     IniciarAplicacao

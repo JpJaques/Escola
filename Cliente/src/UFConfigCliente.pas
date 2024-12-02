@@ -23,20 +23,30 @@ Vcl.StdCtrls,
 JvExStdCtrls,
 JvEdit,
 System.IniFiles,
-UInicializacao;
+UInicializacao, Vcl.ValEdit;
 
 type
   TFConfigCliente = class(TForm)
     pnlGeral: TJvPanel;
     btnGravar: TJvSpeedButton;
     btnCancelar: TJvSpeedButton;
-    edtHostname: TJvEdit;
-    edtPorta: TJvEdit;
+    Panel1: TPanel;
+    VlServer: TValueListEditor;
     procedure btnGravarClick(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    const
+      SERVER = 'SERVIDOR';
+      PORT   = 'PORTA';
+      HOST   = 'HOSTNAME';
+
+    var
+
+      FINI: TIniFile;
   public
     { Public declarations }
   end;
@@ -55,22 +65,12 @@ end;
 
 procedure TFConfigCliente.btnGravarClick(Sender: TObject);
 var
-  INI : TIniFile;
-  Diretorio, Arquivo : string;
+  I: Integer;
 begin
-  Diretorio := UInicializacao.RetornaDiretorio(tDiretorio);
-  if Not DirectoryExists(Diretorio) then
-    ForceDirectories(Diretorio);
-
-  Arquivo   := UInicializacao.RetornaDiretorio(tArquivo);
-  INI       := TIniFile.Create(Arquivo);
-  try
-    if (edtHostname.Text <> INI.ReadString('SERVIDOR','HOSTNAME','')) then
-      INI.WriteString('SERVIDOR', 'HOSTNAME',edtHostname.Text)
-    else if (edtPorta.Text <> INI.ReadString('SERVIDOR','PORTA','')) then
-      INI.WriteString('SERVIDOR', 'PORTA',edtPorta.Text);
-  finally
-   INI.Free;
+  for I := Low(VlServer.RowCount) to High(VlServer.RowCount) do
+  begin
+     FINI.DeleteKey(SERVER,VlServer.Keys[I]);
+     FINI.WriteString(SERVER,VlServer.Keys[I], VlServer.Values[VlServer.Keys[I]]);
   end;
 
   Close;
@@ -78,7 +78,26 @@ end;
 
 procedure TFConfigCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  FreeAndNil(self);
+  FINI.Free;
+  Action := caFree;
+end;
+
+procedure TFConfigCliente.FormCreate(Sender: TObject);
+var  Diretorio, Arquivo : string;
+begin
+  Diretorio := UInicializacao.RetornaDiretorio(tDiretorio);
+  if Not DirectoryExists(Diretorio) then
+    ForceDirectories(Diretorio);
+
+  Arquivo := UInicializacao.RetornaDiretorio(tArquivo);
+  FINI    := TIniFile.Create(Arquivo);
+end;
+
+procedure TFConfigCliente.FormShow(Sender: TObject);
+begin
+  VlServer.Strings.Clear;
+  VlServer.Strings.Add('HostName=' + FINI.ReadString(SERVER,HOST,'LocalHost'));
+  VlServer.Strings.Add('Port=' + FINI.ReadString(SERVER,PORT,'3055'));
 end;
 
 end.

@@ -86,7 +86,8 @@ begin
   try
     GetConection.Execute(ASQL, AParam);
 
-    if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+    if GetConection.InTransaction then
+      GetConection.CommitFreeAndNil(Transacao);
 
   except on E:Exception do
     begin
@@ -109,28 +110,22 @@ begin
     LSQLDS.CommandText   := ASQL;
 
     if CriarTransacao then
-    begin
-      GetConection.HasTransaction(Transacao);
-      GetConection.BeginTransaction;
-    end;
+      Transacao := GetConection.BeginTransaction;
 
     try
-
       Result := LSQLDS.ExecSQL;
-
-      if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+      if GetConection.InTransaction then
+        GetConection.CommitFreeAndNil(Transacao);
 
     except
       on E:Exception do
       begin
-        if GetConection.InTransaction then GetConection.RollbackFreeAndNil(Transacao);
+        if GetConection.InTransaction then
+          GetConection.RollbackFreeAndNil(Transacao);
 
         raise Exception.Create('Falha ao Executar: ' + #13 + E.Message);
-
       end;
-
     end;
-
   finally
     LSQLDS.Free;
   end;
@@ -142,20 +137,14 @@ var
   LSQLDS:    TSQLDataSet;
 begin
   LSQLDS := TSQLDataSet.Create(Nil);
-
   try
     LSQLDS.SQLConnection := GetConection;
     LSQLDS.CommandText   := ASQL;
-
     try
       IF CriarTransacao THEN
-      begin
         Transacao :=  GetConection.BeginTransaction;
-      end;
 
       LSQLDS.Open ;
-
-
       case LSQLDS.Fields[0].DataType of
         ftString:   Result := LSQLDS.Fields[0].AsString;
         ftInteger:  Result := LSQLDS.Fields[0].AsInteger;
@@ -167,21 +156,20 @@ begin
         Result := LSQLDS.Fields[0].AsVariant;
       end;
 
-      if GetConection.InTransaction then GetConection.CommitFreeAndNil(Transacao);
+      if GetConection.InTransaction then
+        GetConection.CommitFreeAndNil(Transacao);
 
     except on E:Exception do
       begin
-        if GetConection.InTransaction then GetConection.RollbackFreeAndNil(Transacao);
+        if GetConection.InTransaction then
+          GetConection.RollbackFreeAndNil(Transacao);
 
         raise Exception.Create('Erro ao Executar: ' + #13 + E.Message);
       end;
     end;
-
-
   finally
     LSQLDS.Free;
   end;
-
 end;
 
 function TSMConexao.GerarCodigo(NomeGenerator: string): integer;
@@ -235,11 +223,7 @@ end;
 
 procedure TSMConexao.RegistraConexao(Conexao : TDSTCPConnectEventObject);
 begin
-  if CDSConexao.IsEmpty then
-    CDSConexao.Insert
-  else
-    CDSConexao.Append;
-
+  CDSConexao.Append;
   CDSConexao.FieldByName('IP').AsString  := Conexao.Channel.ChannelInfo.ClientInfo.IpAddress;
   CDSConexao.FieldByName('ID').AsInteger := GetCurrentThreadId;
   CDSConexao.Post;
@@ -266,9 +250,8 @@ function TSMConexao.TestaConexao(const AUser, ASenha,ADatabase: String): string;
   DBParamConfig : TConfigDatabase;
 begin
   try
-
-    Con                := TSQLConnection.Create(nil);
-    DBParamConfig      := TConfigDatabase.Create(self);
+    Con           := TSQLConnection.Create(nil);
+    DBParamConfig := TConfigDatabase.Create(self);
 
     Con.DriverName     := 'Firebird';
     Con.ConnectionName := 'FBConnection';
@@ -301,17 +284,14 @@ var
   DBParamConfig : TConfigDatabase;
 begin
   try
-
     Con                := TSQLConnection.Create(nil);
     DBParamConfig      := TConfigDatabase.Create(self);
-
     Con.DriverName     := 'Firebird';
     Con.ConnectionName := 'FBConnection';
     Con.LoginPrompt    := False;
 
     Con.Params.Clear;
     Con.Params.Text    := DBParamConfig.GetParams;
-
     try
       Con.Open;
       Result := '';
@@ -322,12 +302,10 @@ begin
         Result := E.Message;
       end;
     end;
-
   finally
     DBParamConfig.Free;
     Con.Free;
   end;
-
 end;
 
 end.
