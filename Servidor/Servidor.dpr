@@ -24,7 +24,7 @@ uses
   UIniConfigDatabase in 'src\UIniConfigDatabase.pas',
   UINI in 'src\UINI.Pas',
   UIniConfigServer in 'src\UIniConfigServer.pas',
-  UFManutencaoDatabase in 'src\UFManutencaoDatabase.pas' {FManutencaoDatabase};
+  UFManutencaoDatabase in 'src\UFManutencaoDatabase.pas'  {FManutencaoDatabase};
 
 {$R *.res}
 
