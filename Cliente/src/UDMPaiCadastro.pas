@@ -81,7 +81,7 @@ end;
 
 procedure TDMPaiCadastro.CDSCadastroNewRecord(DataSet: TDataSet);
 begin
- CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger:=  DMConexao.GerarCodigo('GEN'_+(FclassFilha.Tabela)+'_ID');
+ CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger:=  DMConexao.GerarCodigo('GEN_'+(FclassFilha.Tabela)+'_ID');
  FcodigoAtual:= CDSCadastro.FieldByName(FclassFilha.CampoCodigo).AsInteger;
 end;
 

@@ -145,7 +145,7 @@ end;
 
 procedure TFPaiCadastro.AnteriorClick(Sender: TObject);
 begin
-  //DMCadastro.Anterior;
+  DMCadastro.Anterior;
   EditCodigo.AsInteger := DMCadastro.CodigoAtual;
 end;
 
