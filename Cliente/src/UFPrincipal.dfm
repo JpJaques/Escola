@@ -40,12 +40,11 @@ object FPrincipal: TFPrincipal
       AlignWithMargins = True
       Left = 4
       Top = 18
-      Width = 667
+      Width = 31
       Height = 13
       Align = alBottom
       Alignment = taCenter
       Caption = 'Label1'
-      ExplicitWidth = 31
     end
   end
   object MainMenu1: TMainMenu
