@@ -22,7 +22,6 @@ object FPaiCadastro: TFPaiCadastro
     Height = 41
     Align = alTop
     TabOrder = 0
-    OnExit = PanelPaiExit
     object Codigo: TLabel
       Left = 14
       Top = 14
@@ -39,6 +38,7 @@ object FPaiCadastro: TFPaiCadastro
       TabOrder = 0
       DecimalPlacesAlwaysShown = False
       OnButtonClick = EditCodigoButtonClick
+      OnExit = EditCodigoExit
       OnKeyPress = EditCodigoKeyPress
     end
     object Anterior: TButton

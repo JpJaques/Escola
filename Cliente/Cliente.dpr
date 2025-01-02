@@ -16,7 +16,9 @@ uses
   ClassUsuario in 'Classes\ClassUsuario.pas',
   UDMCadUsuario in 'src\UDMCadUsuario.pas' {DMCadUsuario: TDataModule},
   UFLogin in 'src\UFLogin.pas' {frmLogin},
-  UFSplash in 'src\UFSplash.pas', System.SysUtils {FrmSplash};
+  UFSplash in 'src\UFSplash.pas',
+  System.SysUtils {FrmSplash},
+  UCadConsulta in 'src\UCadConsulta.pas' {FConsulta};
 
 {$R *.res}
 var Login: TfrmLogin;
@@ -43,13 +45,11 @@ begin
 
   FrmSplash.Passo(20,'Carregando Arquivo Conexão.');
 
-  TStyleManager.TrySetStyle('Tablet Light');
-
   FrmSplash.Passo(40,'Criando Configurações.');
 
   FrmSplash.Passo(50,'Criando FPrincipal.');
   Application.CreateForm(TFPrincipal, FPrincipal);
-
+  Application.CreateForm(TFConsulta, FConsulta);
   FrmSplash.Passo(70,'Conectando ao Banco de Dados.');
 
   FrmSplash.Passo(100,'Logando no sistema.');

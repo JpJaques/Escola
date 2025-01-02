@@ -9,6 +9,7 @@ uses
 type
   TDMCadUsuario = class(TDMPaiCadastro)
     procedure DataModuleCreate(Sender: TObject);
+    procedure CDSCadastroNewRecord(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -23,6 +24,15 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TDMCadUsuario.CDSCadastroNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+ CDSCadastro.FieldByName('ADMINISTRADOR').AsString := 'N';
+ CDSCadastro.FieldByName('ALUNO').AsString := 'N';
+ CDSCadastro.FieldByName('PROFESSOR').AsString := 'N';
+ CDSCadastro.FieldByName('DIRETOR').AsString := 'N';
+end;
 
 procedure TDMCadUsuario.DataModuleCreate(Sender: TObject);
 begin

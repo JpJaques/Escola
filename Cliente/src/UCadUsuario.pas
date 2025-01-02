@@ -14,6 +14,11 @@ type
     dbSenha: TDBEdit;
     Usuário: TLabel;
     Senha: TLabel;
+    Grupo_de_Usuario: TGroupBox;
+    DBAdmin: TDBCheckBox;
+    DBCBProf: TDBCheckBox;
+    DBcBDiretor: TDBCheckBox;
+    DBCCAluno: TDBCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure IncluirClick(Sender: TObject);
   private

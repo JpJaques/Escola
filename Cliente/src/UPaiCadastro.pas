@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Imaging.jpeg, JvExExtCtrls,
   JvExtComponent, JvClock, Vcl.Buttons, Vcl.Mask, JvExMask, JvToolEdit,
-  JvBaseEdits, Data.DB, UDMPaiCadastro;
+  JvBaseEdits, Data.DB, UDMPaiCadastro, UCadConsulta;
 
 type
   TFPaiCadastro = class(TForm)
@@ -78,7 +78,16 @@ end;
 
 procedure TFPaiCadastro.EditCodigoButtonClick(Sender: TObject);
 begin
-  abort;
+   FConsulta:= TFConsulta.Create(SELF);
+     try
+   FConsulta.FclassFilha := DMcadastro.FclassFilha;
+   FConsulta.ShowModal;
+   abort;
+     finally
+   Editcodigo.AsInteger:= (FConsulta.RetornoConsulta);
+   FreeAndNil(Fconsulta);
+   DMCadastro.AbrirRegistro(Editcodigo.AsInteger);
+end;
 end;
 
 procedure TFPaiCadastro.EditCodigoExit(Sender: TObject);

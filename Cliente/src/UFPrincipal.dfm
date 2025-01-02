@@ -37,14 +37,15 @@ object FPrincipal: TFPrincipal
     ParentBackground = False
     TabOrder = 1
     object Label1: TLabel
-      AlignWithMargins = True
-      Left = 4
-      Top = 18
+      Left = 538
+      Top = 12
       Width = 31
       Height = 13
-      Align = alBottom
+      Align = alCustom
       Alignment = taCenter
+      BiDiMode = bdRightToLeftNoAlign
       Caption = 'Label1'
+      ParentBiDiMode = False
     end
   end
   object MainMenu1: TMainMenu

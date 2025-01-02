@@ -60,7 +60,11 @@ class function TClassUsuario.SqlCadastro: String;
 begin
   Result := 'select USUARIO.COD_USUARIO,'       +#13+
                    'USUARIO.NOME_USUARIO,'      +#13+
-                   'USUARIO.SENHA_USUARIO'      +#13+
+                   'USUARIO.SENHA_USUARIO,'     +#13+
+                   'USUARIO.ADMINISTRADOR,'     +#13+
+                   'USUARIO.PROFESSOR,'         +#13+
+                   'USUARIO.ALUNO,'             +#13+
+                   'USUARIO.DIRETOR'            +#13+
               'from USUARIO'                    +#13+
              'where USUARIO.COD_USUARIO = :COD';
 end;
