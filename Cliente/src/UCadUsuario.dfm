@@ -5,10 +5,6 @@
   TextHeight = 13
   inherited PageControl1: TPageControl
     inherited TabSheet1: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 449
-      ExplicitHeight = 326
       object Usuário: TLabel
         Left = 40
         Top = 62

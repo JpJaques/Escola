@@ -41,6 +41,9 @@ type
     procedure EditCodigoButtonClick(Sender: TObject);
     procedure PanelPaiExit(Sender: TObject);
     procedure EditCodigoExit(Sender: TObject);
+    procedure arredondacantos;
+    procedure arredondabotoes;
+
      // procedure Sempremaiuscula()
   private
 
@@ -56,6 +59,42 @@ var
 implementation
 
   {$R *.dfm}
+
+
+procedure TFPaiCadastro.arredondabotoes;
+var
+  I: Integer;
+  Rgn: HRGN;
+  Btn: TButton;
+begin
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TButton then
+    begin
+      Btn := TButton(Components[I]);
+      Rgn := CreateRoundRectRgn(0, 0, Btn.Width, Btn.Height, 25, 25); // 20 é o raio dos cantos arredondados
+      SetWindowRgn(Btn.Handle, Rgn, True);
+    end;
+  end;
+end;
+
+procedure TFPaiCadastro.arredondacantos;
+var
+  I: Integer;
+  Rgn: HRGN;
+  Panel: TPanel;
+begin
+  for I := 0 to ComponentCount - 1 do
+  begin
+    if Components[I] is TPanel then
+    begin
+      Panel := TPanel(Components[I]);
+      Rgn := CreateRoundRectRgn(0, 0, Panel.Width, Panel.Height, 25, 25); // 20 é o raio dos cantos arredondados
+      SetWindowRgn(Panel.Handle, Rgn, True);
+    end;
+  end;
+end;
+
 
 procedure TFPaiCadastro.CancelarClick(Sender: TObject);
 begin
@@ -87,7 +126,7 @@ begin
    Editcodigo.AsInteger:= (FConsulta.RetornoConsulta);
    FreeAndNil(Fconsulta);
    DMCadastro.AbrirRegistro(Editcodigo.AsInteger);
-end;
+ end;
 end;
 
 procedure TFPaiCadastro.EditCodigoExit(Sender: TObject);
@@ -116,7 +155,9 @@ procedure TFPaiCadastro.FormCreate(Sender: TObject);
 begin
   DS.DataSet:= DMCadastro.CDSCadastro;
   DMCadastro.AbrirRegistro(1);
-  EditCodigo.Text:=Inttostr(DMcadastro.CodigoAtual)
+  EditCodigo.Text:=Inttostr(DMcadastro.CodigoAtual);
+  arredondacantos;
+  arredondabotoes;
 end;
 
 procedure TFPaiCadastro.GravarClick(Sender: TObject);

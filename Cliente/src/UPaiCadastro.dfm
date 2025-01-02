@@ -21,6 +21,8 @@ object FPaiCadastro: TFPaiCadastro
     Width = 632
     Height = 41
     Align = alTop
+    Color = clMenu
+    ParentBackground = False
     TabOrder = 0
     object Codigo: TLabel
       Left = 14
@@ -51,7 +53,7 @@ object FPaiCadastro: TFPaiCadastro
       OnClick = AnteriorClick
     end
     object Proximo: TButton
-      Left = 560
+      Left = 554
       Top = 2
       Width = 32
       Height = 33
@@ -60,7 +62,7 @@ object FPaiCadastro: TFPaiCadastro
       OnClick = ProximoClick
     end
     object Ultimo: TButton
-      Left = 602
+      Left = 596
       Top = 2
       Width = 30
       Height = 33

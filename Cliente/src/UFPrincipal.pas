@@ -35,6 +35,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure Usurio1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+ //   procedure arredondacantos;
   private
     { Private declarations }
     procedure Inicializar;
@@ -49,10 +50,19 @@ implementation
 
 {$R *.dfm}
 
+{procedure TFPrincipal.arredondacantos;
+Var
+ Rgn: HRGN;
+Begin
+ Rgn := CreateRoundRectRgn(0, 0, Panel1.Width, Panel1.Height, 20, 20); // 20 é o raio dos cantos arredondados
+  SetWindowRgn(Panel1.Handle, Rgn, True);
+End; }
+
 procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
   Inicializar;
   DMconexao := TDMConexao.Create(Self);
+ // arredondacantos;
 end;
 
 procedure TFPrincipal.Inicializar;
@@ -94,6 +104,9 @@ begin
   Label1.Caption := Label1.Caption + ' Hoje é ' +
     formatdatetime('dddd d ''de'' mmmmmm ''de'' yyyy', Date);
 end;
+
+
+
 
 procedure TFPrincipal.Usurio1Click(Sender: TObject);
 begin
