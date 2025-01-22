@@ -22,3 +22,4 @@ Cliente/Cliente.exe
 *.FDB
 *.dproj
 /UnitsRemovidas
+*.orig
